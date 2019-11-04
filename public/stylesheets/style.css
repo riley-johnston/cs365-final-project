@@ -1,33 +1,44 @@
 
-
-h1{
-
-  font-family: 'Courier New', Courier, monospace;
-}
 body {
   text-align: center;
   background-color: lightblue;
   padding: 25px;
+  font-family: 'Courier New', Courier, monospace;
 }
-
-#table1{
+#app{
   position: absolute;
-  margin-left: 5px;
+}
+#grids{
+  float: left;
+}
+#ships{
+  float: right;
+}
+#table1{
+  float: left;
 }
 #table2{
-  position: absolute;
-  margin-right: 5px;
+  float: right;
 }
 table {
+  margin: 50px;
+  text-align: center;
   border-collapse: collapse;
 }
-th {
-  border: 1px solid black;
+thead {
+  display: table-header-group;
+  vertical-align: middle;
+  border-color: inherit;
 }
 td {
-  border: 1px, solid, black;
+  border: 1px solid black;
+  width: 30px;
+  height: 30px;
 }
-
+button{
+  width: 30px;
+  height: 30px;
+}      
 a {
   color: #00B7FF;
 }

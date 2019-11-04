@@ -8,26 +8,14 @@
 <body>
   <h1>BATTLESHIP</h1>
   <div id="app">
-    <div id="table1">
-      <table id="myTable1">
-        <tr>
-            <td></td>
-            <td v-for="(data, index) in results">
-                {{index + 1}}
-            </td>
-        </tr>
-        <tr v-for="(row, rowIndex) in results">
-            <td>
-                {{String.fromCharCode(rowIndex + 65)}}
-            </td>
-            <td v-for="(col, colIndex) in row">
-                <button class="dropbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
-            </td>
-        </tr>
-      </table>
-    </div>
-    <div id="table2">
-        <table id="myTable2">
+    <div id="grids">
+      <div id="table1">
+        <table id="myTable1">
+          <thead>
+            <tr>
+              <th colspan="11">Player 1</th>
+            </tr>
+          </thead>
           <tr>
               <td></td>
               <td v-for="(data, index) in results">
@@ -44,6 +32,61 @@
           </tr>
         </table>
       </div>
+      <div id="table2">
+          <table id="myTable2">
+            <thead>
+              <tr>
+                <th colspan="11">Player 2</th>
+              </tr>
+            </thead>
+            <tr>
+                <td></td>
+                <td v-for="(data, index) in results">
+                    {{index + 1}}
+                </td>
+            </tr>
+            <tr v-for="(row, rowIndex) in results">
+                <td>
+                    {{String.fromCharCode(rowIndex + 65)}}
+                </td>
+                <td v-for="(col, colIndex) in row">
+                    <button class="dropbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
+                </td>
+            </tr>
+          </table>
+      </div>
+    </div>
+    <div id="ships">
+        <div id="table3">
+            <table id="myTable3">
+              <thead>
+                <tr>
+                  <th colspan="2">My Ships</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>Carrier</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>Battleship</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>Cruiser</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>Submarine</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>Destroyer</td>
+                <td>2</td>
+              </tr>
+            </table>
+        </div>
+    </div>
   </div>
 </body>
     <script src="javascripts/jquery-3.4.1.js"></script>

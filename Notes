@@ -13,3 +13,10 @@ Order of tackling:
 8)	Figure out the spectator function. If there is more than two players, have the first two to log in play the game and have any other players automatically spectate. If the game ends, change the third player who logged in to ask if they want to join the game. If not, continue through the list of players who have logged in. If no one says they want to play, tell the first player that they are waiting for player 2.
 9)	Figure out the forfeit button. If one of the players clicks the forfeit button, ask that player “Are you sure you want to forfeit?” If they click yes, have the game end with one player seeing the win page and the other player seeing the lost page. 
 
+Ships:
+
+	Carrier		5
+    Battleship	4
+    Cruiser		3
+    Submarine	3
+    Destroyer	2
