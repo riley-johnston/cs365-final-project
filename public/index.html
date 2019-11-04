@@ -17,13 +17,13 @@
             </tr>
           </thead>
           <tr>
-              <td></td>
-              <td v-for="(data, index) in results">
+              <td style="background-color:#0086c3;color: white"></td>
+              <td style="background-color:#0086c3;color: white" v-for="(data, index) in results">
                   {{index + 1}}
               </td>
           </tr>
           <tr v-for="(row, rowIndex) in results">
-              <td>
+              <td style="background-color:#0086c3;color: white">
                   {{String.fromCharCode(rowIndex + 65)}}
               </td>
               <td v-for="(col, colIndex) in row">
@@ -40,13 +40,13 @@
               </tr>
             </thead>
             <tr>
-                <td></td>
-                <td v-for="(data, index) in results">
+                <td style="background-color:#0086c3;color: white"></td>
+                <td style="background-color:#0086c3;color: white" v-for="(data, index) in results">
                     {{index + 1}}
                 </td>
             </tr>
             <tr v-for="(row, rowIndex) in results">
-                <td>
+                <td style="background-color:#0086c3;color: white">
                     {{String.fromCharCode(rowIndex + 65)}}
                 </td>
                 <td v-for="(col, colIndex) in row">
@@ -65,23 +65,23 @@
                 </tr>
               </thead>
               <tr>
-                <td>Carrier</td>
+                <td style="background-color:#0086c3;color: white">Carrier</td>
                 <td>5</td>
               </tr>
               <tr>
-                <td>Battleship</td>
+                <td style="background-color:#0086c3;color: white">Battleship</td>
                 <td>4</td>
               </tr>
               <tr>
-                <td>Cruiser</td>
+                <td style="background-color:#0086c3;color: white">Cruiser</td>
                 <td>3</td>
               </tr>
               <tr>
-                <td>Submarine</td>
+                <td style="background-color:#0086c3;color: white">Submarine</td>
                 <td>3</td>
               </tr>
               <tr>
-                <td>Destroyer</td>
+                <td style="background-color:#0086c3;color: white">Destroyer</td>
                 <td>2</td>
               </tr>
             </table>
@@ -94,22 +94,48 @@
                 </tr>
               </thead>
               <tr>
-                <td>Hit</td>
+                <td style="background-color:#0086c3;color: white">Hit</td>
                 <td id="hit"></td>
               </tr>
               <tr>
-                <td>Sunk</td>
+                <td style="background-color:#0086c3;color: white">Sunk</td>
                 <td id="sunk"></td>
               </tr>
               <tr>
-                <td>Miss</td>
+                <td style="background-color:#0086c3;color: white">Miss</td>
                 <td id="miss"></td>
               </tr>
               <tr>
-                <td>Open Water</td>
+                <td style="background-color:#0086c3;color: white">Open Water</td>
                 <td id = "water"></td>
               </tr>
             </table>
+        </div>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Temp Buttons (change this)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Forfiet
+                </td>
+              </tr>
+              <tr>
+                  <td>
+                    Random 
+                  </td>
+                </tr>
+                <tr>
+                    <td>
+                      Ready
+                    </td>
+                  </tr>
+            </tbody>
+          </table>
         </div>
     </div>
   </div>

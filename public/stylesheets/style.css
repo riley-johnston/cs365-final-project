@@ -1,17 +1,18 @@
 
 body {
   text-align: center;
-  background-color: lightgrey;
-  padding: 25px;
+  background-color: #9e9e9e;
+  padding: 15px;
   font-family: 'Courier New', Courier, monospace;
 }
-#app{
-  position: absolute;
-}
 #grids{
+  background-color: white;
+  border: 1px solid black;
   float: left;
 }
 #key{
+  background-color: white;
+  border: 1px solid black;
   float: right;
 }
 #table1{
@@ -36,19 +37,18 @@ body {
   background-color: black;
 }
 #water{
-  background-color: lightblue;
+  background-color:#73e8ff;
 }
 table {
-  margin: 50px;
+  margin: 40px;
   text-align: center;
   border-collapse: collapse;
 }
 thead {
-  display: table-header-group;
-  vertical-align: middle;
-  border-color: inherit;
+  background-color: #cfcfcf; 
 }
 td {
+  background-color:#73e8ff;
   border: 1px solid black;
   width: 30px;
   height: 30px;
@@ -56,9 +56,7 @@ td {
 button{
   width: 30px;
   height: 30px;
-  background-color: lightblue;
+  background-color:#73e8ff;
   border: none;
 }      
-a {
-  color: #00B7FF;
-}
+
