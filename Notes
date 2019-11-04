@@ -14,7 +14,7 @@ Order of tackling:
 9)	Figure out the forfeit button. If one of the players clicks the forfeit button, ask that player “Are you sure you want to forfeit?” If they click yes, have the game end with one player seeing the win page and the other player seeing the lost page. 
 
 Ships:
-
+	Name:		Size:
 	Carrier		5
     Battleship	4
     Cruiser		3
