@@ -1,12 +1,31 @@
 
 
 h1{
+
   font-family: 'Courier New', Courier, monospace;
 }
 body {
-  align-content: center;
+  text-align: center;
   background-color: lightblue;
   padding: 25px;
+}
+
+#table1{
+  position: absolute;
+  margin-left: 5px;
+}
+#table2{
+  position: absolute;
+  margin-right: 5px;
+}
+table {
+  border-collapse: collapse;
+}
+th {
+  border: 1px solid black;
+}
+td {
+  border: 1px, solid, black;
 }
 
 a {
