@@ -11,8 +11,8 @@ var v = new Vue({
     
     methods: {
         changeResult(column, row, col){
-            if(/*There is a ship there*/){
-               if(/*The ship has been sunk*/){
+            if(/*There is a ship there*/ 0 == 0){
+               if(/*The ship has been sunk*/0 == 0){
 
                } else {
                    /*The ship has not been sunk*/
