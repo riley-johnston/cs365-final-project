@@ -1,8 +1,12 @@
 
 
+h1{
+  font-family: 'Courier New', Courier, monospace;
+}
 body {
-  color: lightblue;
-  padding: 50px;
+  align-content: center;
+  background-color: lightblue;
+  padding: 25px;
 }
 
 a {
