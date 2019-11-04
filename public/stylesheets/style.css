@@ -1,7 +1,7 @@
 
 body {
   text-align: center;
-  background-color: lightblue;
+  background-color: lightgrey;
   padding: 25px;
   font-family: 'Courier New', Courier, monospace;
 }
@@ -11,7 +11,7 @@ body {
 #grids{
   float: left;
 }
-#ships{
+#key{
   float: right;
 }
 #table1{
@@ -19,6 +19,24 @@ body {
 }
 #table2{
   float: right;
+}
+#table3{
+  float: left;
+}
+#table4{
+  float:right;
+}
+#hit{
+  background-color: red;
+}
+#miss{
+  background-color: white;
+}
+#sunk{
+  background-color: black;
+}
+#water{
+  background-color: lightblue;
 }
 table {
   margin: 50px;
@@ -38,6 +56,8 @@ td {
 button{
   width: 30px;
   height: 30px;
+  background-color: lightblue;
+  border: none;
 }      
 a {
   color: #00B7FF;
