@@ -18,3 +18,19 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 module.exports = app;
+
+var officialPlayer1;
+var officialPlayer2;
+var p1Temp;
+var p2Temp;
+
+app.post("/updateArray", function(req, res){
+    res.setHeader("Content-Type", "application/json");
+    p1Temp = req.body.updatedShips;
+    res.write(JSON.stringify(p1Temp));
+    res.end();
+});
+
+app.listen(80, function() {
+    console.log("Server is waiting on port 80");
+});
