@@ -15,28 +15,22 @@ body {
   border: 1px solid black;
   float: right;
 }
-#table1{
-  float: left;
-}
-#table2{
+.tableRight{
   float: right;
 }
-#table3{
+.tableLeft{
   float: left;
 }
-#table4{
-  float:right;
-}
-#hit{
+.hit{
   background-color: red;
 }
-#miss{
+.miss{
   background-color: white;
 }
-#sunk{
+.sunk{
   background-color: black;
 }
-#water{
+.water{
   background-color:#73e8ff;
 }
 table {

@@ -9,11 +9,11 @@
   <h1>BATTLESHIP</h1>
   <div id="app">
     <div id="grids">
-      <div id="table1">
+      <div id="table1" class="tableLeft">
         <table id="myTable1">
           <thead>
             <tr>
-              <th colspan="11">Player 1</th>
+              <th colspan="11">My Guesses</th>
             </tr>
           </thead>
           <tr>
@@ -32,11 +32,11 @@
           </tr>
         </table>
       </div>
-      <div id="table2">
+      <div id="table2" class="tableRight">
           <table id="myTable2">
             <thead>
               <tr>
-                <th colspan="11">Player 2</th>
+                <th colspan="11">My Ships</th>
               </tr>
             </thead>
             <tr>
@@ -57,11 +57,11 @@
       </div>
     </div>
     <div id="key">
-        <div id="table3">
+        <div id="table3" class="tableLeft">
             <table id="myTable3">
               <thead>
                 <tr>
-                  <th colspan="2">My Ships</th>
+                  <th colspan="2">Ships</th>
                 </tr>
               </thead>
               <tr>
@@ -86,7 +86,7 @@
               </tr>
             </table>
         </div>
-        <div id="table4">
+        <div id="table4" class="tableRight">
             <table id="myTable4">
               <thead>
                 <tr>
@@ -95,19 +95,19 @@
               </thead>
               <tr>
                 <td style="background-color:#0086c3;color: white">Hit</td>
-                <td id="hit"></td>
+                <td class="hit"></td>
               </tr>
               <tr>
                 <td style="background-color:#0086c3;color: white">Sunk</td>
-                <td id="sunk"></td>
+                <td class="sunk"></td>
               </tr>
               <tr>
                 <td style="background-color:#0086c3;color: white">Miss</td>
-                <td id="miss"></td>
+                <td class="miss"></td>
               </tr>
               <tr>
                 <td style="background-color:#0086c3;color: white">Open Water</td>
-                <td id = "water"></td>
+                <td class = "water"></td>
               </tr>
             </table>
         </div>
