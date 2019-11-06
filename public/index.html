@@ -27,7 +27,7 @@
                   {{String.fromCharCode(rowIndex + 65)}}
               </td>
               <td v-for="(col, colIndex) in row">
-                  <button class="dropbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
+                  <button class="gridbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
               </td>
           </tr>
         </table>
@@ -50,7 +50,7 @@
                     {{String.fromCharCode(rowIndex + 65)}}
                 </td>
                 <td v-for="(col, colIndex) in row">
-                    <button class="dropbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
+                    <button class="gridbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
                 </td>
             </tr>
           </table>
