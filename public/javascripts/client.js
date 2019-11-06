@@ -59,10 +59,10 @@ var v = new Vue({
             });
         },
         forfeit(){
-
+            
         },
         randomPlacement(){
-            
+
         },
         ready(){
 

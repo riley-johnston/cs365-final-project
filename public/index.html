@@ -45,12 +45,12 @@
                     {{index + 1}}
                 </td>
             </tr>
-            <tr v-for="(row, rowIndex) in results">
+            <tr v-for="(row, rowIndex) in myShips">
                 <td style="background-color:#0086c3;color: white">
                     {{String.fromCharCode(rowIndex + 65)}}
                 </td>
                 <td v-for="(col, colIndex) in row">
-                    <button id="water" class="gridbtn" v-on:click="changeResult(col, rowIndex, colIndex)"></button>
+                    <button id="water" class="gridbtn" v-on:click="changeResult(col, rowIndex, colIndex)">{{col}}</button>
                 </td>
             </tr>
           </table>
