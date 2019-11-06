@@ -62,7 +62,22 @@ var v = new Vue({
 
         },
         randomPlacement(){
-            
+            for(var i = 0; i < 5; i++){
+                this.myShips[i][2] = 5; //place carrier
+            }
+            for(var i = 6; i < 9; i++){
+                this.myShips[5][i] = 3; //place cruiser
+            }
+            for(var i = 6; i < 10; i++){
+                this.myShips[9][i] = 4; //place battleship
+            }
+            for(var i = 3; i < 6; i++){
+                this.myShips[i][9] = 3; //place submarine
+            }
+            for(var i = 0; i < 3; i++){
+                this.myShips[6][i] = 2; //place destroyer
+            }
+            console.log(this.myShips);
         },
         ready(){
 
