@@ -47,9 +47,11 @@ td {
   width: 30px;
   height: 30px;
 }
-button{
+.gridbtn{
   width: 30px;
   height: 30px;
+}
+button{
   border: none;
   font-family: 'Courier New', Courier, monospace;
 }      
