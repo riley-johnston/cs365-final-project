@@ -32,7 +32,7 @@ var v = new Vue({
         changeResult(row, col){
             if(this.myShips[row][col] != " "){
                if(/*The ship has been sunk*/this.color == "N/A"){
-                   /*My color and the colors of the ships around me turn black*/
+                   /*My color and the colors of the ship's squares around me turn black*/
                    this.color = "Black";
                } else {
                    /*The ship has not been sunk*/
