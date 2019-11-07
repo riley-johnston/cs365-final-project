@@ -2,6 +2,7 @@ var v = new Vue({
     el: '#app',
     data:{
         numPlayers: 0,
+        color: "N/A",
         myGuess: [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -29,20 +30,20 @@ var v = new Vue({
     },
     
     methods: {
-        changeResult(column, row, col){
-            var color = "N/A";
-            if(this.myShips[row][col] != 0){
-               if(/*The ship has been sunk*/0 == 0){
+        changeResult(row, col){
+            if(this.myShips[row][col] == 0){
+               if(/*The ship has been sunk*/this.color == "N/A"){
                    /*My color and the colors of the ships around me turn black*/
+                   this.color = "Black";
                } else {
                    /*The ship has not been sunk*/
-                   color = "Red";
+                   this.color = "Red"; /*change the CSS property?*/
                }
             } else {
                 /*There is no ship there*/
-                color = "White";
+                this.color = "White";
             }
-            this.results[col].splice(row, 1, color);
+            this.myShips[row].splice(col, 1, this.color);
             $.post("/updateArray", {updatedResults: this.results}, function(){
             });
         },
