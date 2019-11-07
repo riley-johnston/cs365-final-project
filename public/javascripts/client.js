@@ -65,7 +65,8 @@ var v = new Vue({
                 this.myShips[6].splice(i, 1, 2); //place destroyer
             }
             console.log(this.myShips);
-
+            $.post("/updateArray", {updatedShips: this.myShips}, function(){
+            });
         },
         ready(){
 
