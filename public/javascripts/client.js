@@ -27,7 +27,6 @@ var v = new Vue({
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
     },
-    
     methods: {
         changeResult(column, row, col){
             var color = "N/A";
@@ -51,19 +50,19 @@ var v = new Vue({
         },
         randomPlacement(){
             for(var i = 0; i < 5; i++){
-                this.myShips[i][2] = 5; //place carrier
+                this.myShips[i].splice(2, 1, 5); //place carrier
             }
             for(var i = 6; i < 9; i++){
-                this.myShips[5][i] = 3; //place cruiser
+                this.myShips[5].splice(i, 1, 3); //place cruiser
             }
             for(var i = 6; i < 10; i++){
-                this.myShips[9][i] = 4; //place battleship
+                this.myShips[9].splice(i, 1, 4); //place battleship
             }
             for(var i = 3; i < 6; i++){
-                this.myShips[i][9] = 3; //place submarine
+                this.myShips[i].splice(9, 1, 3); //place submarine
             }
             for(var i = 0; i < 3; i++){
-                this.myShips[6][i] = 2; //place destroyer
+                this.myShips[6].splice(i, 1, 2); //place destroyer
             }
             console.log(this.myShips);
 
@@ -74,4 +73,5 @@ var v = new Vue({
     }
 })
 
-console.log(v.results);
+
+
