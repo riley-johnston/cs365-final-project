@@ -31,8 +31,8 @@ var v = new Vue({
     methods: {
         changeResult(row, col){
             this.color = document.getElementById("myTable1").getElementsByClassName("gridbtn"); /*This gets all of the buttons belonging to the class gridbtn*/
-            var index = this.myGuess[row]; /*This grabs the whole row, but as soon as I try to get the column, it is undefined.*/
-            console.log(index);
+            //var index = this.myGuess[row]; /*This grabs the whole row, but as soon as I try to get the column, it is undefined.*/
+            //console.log(index);
             if(this.myShips[row][col] != " "){
                if(/*The ship has been sunk*/this.color == "N/A"){
                    /*My color and the colors of the ship's squares around me turn black*/
