@@ -4,16 +4,16 @@ var v = new Vue({
         numPlayers: 0,
         color: "N/A",
         myGuess: [
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
         myShips: [
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -30,24 +30,22 @@ var v = new Vue({
     },
     methods: {
         changeResult(row, col){
-            this.color = document.getElementById("myTable1").getElementsByClassName("gridbtn"); /*This gets all of the buttons belonging to the class gridbtn*/
-            var index = this.myGuess[row]; /*This grabs the whole row, but as soon as I try to get the column, it is undefined.*/
-            console.log(index);
             if(this.myShips[row][col] != " "){
                if(/*The ship has been sunk*/this.color == "N/A"){
                    /*My color and the colors of the ship's squares around me turn black*/
-                   this.color = "Black";
+                   //this.color = "Black";
                } else {
                    /*The ship has not been sunk, but has been hit*/
-                   this.color[row].style.backgroundColor = "red"; /*change the CSS property?*/
+                   this.myGuess[row][col] = 1; //hit
                }
             } else {
                 /*There is no ship there*/
-                this.color[row].style.backgroundColor = "white";
+                this.myGuess[row][col] = 2; //miss
             }
-            //this.myShips[row].splice(col, 1, this.color);
-            $.post("/updateArray", {updatedResults: this.results}, function(){
-            });
+            //$.post("/updateArray", {updatedResults: this.results}, function(){
+            //});
+            this.color = this.styleForRowCol(row, col);
+            console.log(color);
         },
         forfeit(){
             
@@ -65,15 +63,35 @@ var v = new Vue({
             for(var i = 3; i < 6; i++){
                 this.myShips[i].splice(9, 1, "3"); //place submarine
             }
-            for(var i = 0; i < 3; i++){
+            for(var i = 0; i < 2; i++){
                 this.myShips[6].splice(i, 1, "2"); //place destroyer
             }
-            console.log(this.myShips);
             $.post("/updateArray", {updatedShips: this.myShips}, function(){
             });
         },
         ready(){
 
+        },
+        styleForRowCol(rowI, colI) {
+            console.log(rowI);
+            console.log(colI);
+            if(this.myGuess[rowI][colI] == 0){
+                return "water";
+            }
+            else if(this.myGuess[rowI][colI] == 1){
+                return "hit";
+            }
+            else if(this.myGuess[rowI][colI] == 2){
+                return "miss";
+            }
+            else if(this.myGuess[rowI][colI] == 3){
+                return "sunk";
+            }
+        }
+    },
+    computed: {
+        colorForRowCol(){
+            return this.color;
         }
     }
 })

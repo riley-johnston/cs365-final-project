@@ -21,16 +21,16 @@ body {
 .tableLeft{
   float: left;
 }
-#hit{
+.hit{
   background-color: red;
 }
-#miss{
+.miss{
   background-color: white;
 }
-#sunk{
+.sunk{
   background-color: black;
 }
-#water{
+.water{
   background-color:#73e8ff;
 }
 table {
