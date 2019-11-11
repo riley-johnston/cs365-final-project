@@ -41,6 +41,7 @@ var v = new Vue({
             } else {
                 /*There is no ship there*/
                 this.color = "White";
+                
             }
             this.myShips[row].splice(col, 1, this.color);
             $.post("/updateArray", {updatedResults: this.results}, function(){
