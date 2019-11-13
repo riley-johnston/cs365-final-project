@@ -3,7 +3,7 @@ var v = new Vue({
     el: '#app',
     data:{
         numPlayers: 0,
-        color: "N/A",
+        color: "water",
         myGuess: [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -46,7 +46,7 @@ var v = new Vue({
             //$.post("/updateArray", {updatedResults: this.results}, function(){
             //});
             this.color = this.styleForRowCol(row, col);
-            console.log(color);
+            console.log(this.color);
         },
         forfeit(){
             
