@@ -26,9 +26,9 @@
               <td style="background-color:#0086c3;color: white">
                   {{String.fromCharCode(rowIndex + 65)}}
               </td>
-              <td v-for="(col, colIndex) in row">  
+              <td v-bind:class="colorGrid[rowIndex][colIndex]" v-for="(col, colIndex) in row">  
                   <!-- v-bind:class="styleForRowCol(rowIndex, colIndex)" -->  
-                  <button v-bind:class="colorForRowCol" class="gridbtn" v-on:click="changeResult(rowIndex, colIndex)"></button>
+                  <button  class="gridbtn" v-on:click="changeResult(rowIndex, colIndex)"></button>
               </td>
           </tr>
         </table>

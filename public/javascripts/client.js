@@ -16,6 +16,18 @@ var v = new Vue({
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
+        colorGrid: [ //TEMPORARY
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
+            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"]
+        ],
         myShips: [
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -38,15 +50,19 @@ var v = new Vue({
                } else {
                    /*The ship has not been sunk, but has been hit*/
                    this.myGuess[row][col] = 1; //hit
+                   this.colorGrid[row][col] = "hit";
                }
             } else {
                 /*There is no ship there*/
                 this.myGuess[row][col] = 2; //miss
+                this.colorGrid[row][col] = "miss";
             }
             //$.post("/updateArray", {updatedResults: this.results}, function(){
             //});
-            this.color = this.styleForRowCol(row, col);
-            console.log(this.color);
+            //send ship grid
+            //get back updated color grid and set to our grid
+            //force update
+            this.$forceUpdate(); // to update the color grid for now bc computed doesnt work 
         },
         forfeit(){
             
@@ -73,6 +89,7 @@ var v = new Vue({
         ready(){
 
         },
+        //this will probably go into the server
         styleForRowCol(rowI, colI) {
             console.log(rowI);
             console.log(colI);
@@ -91,9 +108,6 @@ var v = new Vue({
         }
     },
     computed: {
-        colorForRowCol(){
-            return this.color;
-        }
     }
 })
 
