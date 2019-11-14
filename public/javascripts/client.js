@@ -16,18 +16,6 @@ var v = new Vue({
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
-        colorGrid: [ //TEMPORARY
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"],
-            ["water","water", "water", "water", "water", "water","water", "water", "water", "water"]
-        ],
         myShips: [
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -49,20 +37,18 @@ var v = new Vue({
                    //this.color = "Black";
                } else {
                    /*The ship has not been sunk, but has been hit*/
-                   this.myGuess[row][col] = 1; //hit
-                   this.colorGrid[row][col] = "hit";
+                   this.myGuess[row].splice(col, 1, 1); //hit
                }
             } else {
                 /*There is no ship there*/
-                this.myGuess[row][col] = 2; //miss
-                this.colorGrid[row][col] = "miss";
+                this.myGuess[row].splice(col, 1, 2); //miss
             }
             //$.post("/updateArray", {updatedResults: this.results}, function(){
             //});
             //send ship grid
             //get back updated color grid and set to our grid
             //force update
-            this.$forceUpdate(); // to update the color grid for now bc computed doesnt work 
+            //this.$forceUpdate(); // to update the color grid for now bc computed doesnt work 
         },
         forfeit(){
             
@@ -90,20 +76,21 @@ var v = new Vue({
 
         },
         //this will probably go into the server
-        styleForRowCol(rowI, colI) {
-            console.log(rowI);
-            console.log(colI);
-            if(this.myGuess[rowI][colI] == 0){
+        styleFor(typeOfSquare) {
+            if(typeOfSquare == 0){
                 return "water";
             }
-            else if(this.myGuess[rowI][colI] == 1){
+            else if(typeOfSquare == 1){
                 return "hit";
             }
-            else if(this.myGuess[rowI][colI] == 2){
+            else if(typeOfSquare == 2){
                 return "miss";
             }
-            else if(this.myGuess[rowI][colI] == 3){
+            else if(typeOfSquare == 3){
                 return "sunk";
+            }
+            else{
+                return " ";
             }
         }
     },
