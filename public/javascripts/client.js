@@ -47,8 +47,6 @@ var v = new Vue({
             //});
             //send ship grid
             //get back updated color grid and set to our grid
-            //force update
-            //this.$forceUpdate(); // to update the color grid for now bc computed doesnt work 
         },
         forfeit(){
             
