@@ -45,8 +45,6 @@ var v = new Vue({
                 /*There is no ship there*/
                 this.myGuess[row].splice(col, 1, 2); //miss
             }
-            //$.post("/updateArray", {updatedResults: this.results}, function(){
-            //});
             //send ship grid
             //get back updated color grid and set to our grid
         },
