@@ -27,7 +27,7 @@
                   {{String.fromCharCode(rowIndex + 65)}}
               </td>
               <td  v-on:click="changeResult(rowIndex, colIndex)" v-bind:class="styleFor(myGuess[rowIndex][colIndex])" v-for="(col, colIndex) in row">  
-                  <!-- v-bind:class="styleForRowCol(rowIndex, colIndex)" -->  
+               
               </td>
           </tr>
         </table>

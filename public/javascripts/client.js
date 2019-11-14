@@ -1,6 +1,5 @@
-import { Socket } from "dgram";
+//import { Socket } from "dgram";
 
-//
 var v = new Vue({
     el: '#app',
     data:{
@@ -91,12 +90,9 @@ var v = new Vue({
     },
     computed: {
     }
-})
+});
 
 $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);
     $("#random").css("visibility", "hidden");
-})
-
-
-
+});
