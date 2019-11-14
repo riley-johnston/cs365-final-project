@@ -1,3 +1,5 @@
+import { Socket } from "dgram";
+
 //
 var v = new Vue({
     el: '#app',
@@ -70,9 +72,6 @@ var v = new Vue({
             $.post("/updateArray", {updatedShips: this.myShips}, function(){
             });
         },
-        ready(){
-
-        },
         //this will probably go into the server
         styleFor(typeOfSquare) {
             if(typeOfSquare == 0){
@@ -94,6 +93,11 @@ var v = new Vue({
     },
     computed: {
     }
+})
+
+$("#ready").click(function(){
+    socket.emit("updateShips", v.myShips);
+    $("#random").css("visibility", "hidden");
 })
 
 
