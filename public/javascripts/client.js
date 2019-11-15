@@ -91,10 +91,8 @@ var v = new Vue({
                 return " ";
             }
         }
-    },
-    computed: {
     }
-});
+);
 
 socket.on('updateDisplay', function(data){
     //update our displayed grids.
