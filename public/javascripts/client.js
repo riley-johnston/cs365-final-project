@@ -1,5 +1,7 @@
 var socket = io();
 //
+//import { Socket } from "dgram";
+
 var v = new Vue({
     el: '#app',
     data:{
@@ -44,6 +46,8 @@ var v = new Vue({
                 /*There is no ship there*/
                 this.myGuess[row].splice(col, 1, 2); //miss
             }
+            //send ship grid
+            //get back updated color grid and set to our grid
         },
         forfeit(){
             
@@ -65,9 +69,6 @@ var v = new Vue({
                 this.myShips[6].splice(i, 1, 2); //place destroyer
             }
             socket.emit("updateShips", this.myShips); //move into ready later
-        },
-        ready(){
-
         },
         //this will probably go into the server
         styleFor(typeOfSquare) {
@@ -111,4 +112,9 @@ socket.on('joined', function(data){
 
 socket.on("clientDisconnect", function(dataFromServer) {
    //player disconnects
+});
+
+$("#ready").click(function(){
+    socket.emit("updateShips", v.myShips);
+    $("#random").css("visibility", "hidden");
 });
