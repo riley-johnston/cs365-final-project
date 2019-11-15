@@ -20,31 +20,28 @@ var v = new Vue({
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
         myShips: [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
         ]
     },
     methods: {
         changeResult(row, col){
-            if(this.myShips[row][col] != " "){
-               if(/*The ship has been sunk*/this.color == "N/A"){
-                   /*My color and the colors of the ship's squares around me turn black*/
-                   //this.color = "Black";
-               } else {
-                   /*The ship has not been sunk, but has been hit*/
-                   this.myGuess[row].splice(col, 1, 1); //hit
-               }
-            } else {
-                /*There is no ship there*/
-                this.myGuess[row].splice(col, 1, 2); //miss
+            if(this.myGuess[row][col] == 0){
+                if(this.myShips[row][col] != " "){
+                        /*The ship has not been sunk, but has been hit*/
+                        this.myGuess[row].splice(col, 1, 1); //hit
+                } else {
+                        /*There is no ship there*/
+                    this.myGuess[row].splice(col, 1, 2); //miss
+                }
             }
             //emit a new guess here
         },
@@ -53,19 +50,19 @@ var v = new Vue({
         },
         randomPlacement(){
             for(var i = 0; i < 5; i++){
-                this.myShips[i].splice(2, 1, 5); //place carrier
+                this.myShips[i].splice(2, 1, "5"); //place carrier
             }
             for(var i = 6; i < 9; i++){
-                this.myShips[5].splice(i, 1, 3); //place cruiser
+                this.myShips[5].splice(i, 1, "3"); //place cruiser
             }
             for(var i = 6; i < 10; i++){
-                this.myShips[9].splice(i, 1, 4); //place battleship
+                this.myShips[9].splice(i, 1, "4"); //place battleship
             }
             for(var i = 3; i < 6; i++){
-                this.myShips[i].splice(9, 1, 3); //place submarine
+                this.myShips[i].splice(9, 1, "3"); //place submarine
             }
             for(var i = 0; i < 2; i++){
-                this.myShips[6].splice(i, 1, 2); //place destroyer
+                this.myShips[6].splice(i, 1, "2"); //place destroyer
             }
         },
         styleFor(typeOfSquare) {
@@ -85,15 +82,13 @@ var v = new Vue({
                 return " ";
             }
         }
-    },
-    computed: {
     }
 });
 
 socket.on('updateDisplay', function(data){
     //update our displayed grids.
    //myShips = data ? but also update screen ("myships"). 
-})
+});
 
 socket.on('created', function(data){
     console.log('Game is created');
