@@ -21,7 +21,7 @@ module.exports = app;
 
 var officialPlayer1;
 var officialPlayer2;
-var p1Temp; // use as temp ship layout then when playing use as color layout
+var p1Temp; 
 var p2Temp;
 
 app.post("/updateArray", function(req, res){
