@@ -1,3 +1,4 @@
+var socket = io();
 //
 var v = new Vue({
     el: '#app',
@@ -17,16 +18,16 @@ var v = new Vue({
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
         myShips: [
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
     },
     methods: {
@@ -43,34 +44,27 @@ var v = new Vue({
                 /*There is no ship there*/
                 this.myGuess[row].splice(col, 1, 2); //miss
             }
-            //$.post("/updateArray", {updatedResults: this.results}, function(){
-            //});
-            //send ship grid
-            //get back updated color grid and set to our grid
-            //force update
-            //this.$forceUpdate(); // to update the color grid for now bc computed doesnt work 
         },
         forfeit(){
             
         },
         randomPlacement(){
             for(var i = 0; i < 5; i++){
-                this.myShips[i].splice(2, 1, "5"); //place carrier
+                this.myShips[i].splice(2, 1, 5); //place carrier
             }
             for(var i = 6; i < 9; i++){
-                this.myShips[5].splice(i, 1, "3"); //place cruiser
+                this.myShips[5].splice(i, 1, 3); //place cruiser
             }
             for(var i = 6; i < 10; i++){
-                this.myShips[9].splice(i, 1, "4"); //place battleship
+                this.myShips[9].splice(i, 1, 4); //place battleship
             }
             for(var i = 3; i < 6; i++){
-                this.myShips[i].splice(9, 1, "3"); //place submarine
+                this.myShips[i].splice(9, 1, 3); //place submarine
             }
             for(var i = 0; i < 2; i++){
-                this.myShips[6].splice(i, 1, "2"); //place destroyer
+                this.myShips[6].splice(i, 1, 2); //place destroyer
             }
-            $.post("/updateArray", {updatedShips: this.myShips}, function(){
-            });
+            socket.emit("updateShips", this.myShips); //move into ready later
         },
         ready(){
 
@@ -96,7 +90,25 @@ var v = new Vue({
     },
     computed: {
     }
+});
+
+socket.on('updateDisplay', function(data){
+    //update our displayed grids.
+   //myShips = data ? but also update screen ("myships"). 
 })
 
+socket.on('created', function(data){
+    //player 1 created a game
+});
 
+socket.on('join', function(data){
+    //player 1 joined game
+});
 
+socket.on('joined', function(data){
+    //p2 join
+});
+
+socket.on("clientDisconnect", function(dataFromServer) {
+   //player disconnects
+});
