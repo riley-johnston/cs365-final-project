@@ -58,7 +58,7 @@ io.on("connection", function(socket){
         player1.emit('created'); //First player created game.
         numClients++;
     }
-    else if(numClient == 1){
+    else if(numClients == 1){
         player2 = socket;
         player1.emit('join'); // First player joined game.
         player2.emit('joined'); // 2nd joined
