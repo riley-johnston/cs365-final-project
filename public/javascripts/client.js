@@ -36,19 +36,11 @@ var v = new Vue({
         changeResult(row, col){
             if(this.myGuess[row][col] == 0){
                 if(this.myShips[row][col] != " "){
-                    if(/*The ship has been sunk*/this.color == "N/A"){
-                        /*My color and the colors of the ship's squares around me turn black*/
-                        this.myGuess[row].splice(col, 1, 3); //sunk MY SQUARE ONLY
-                    } else {
                         /*The ship has not been sunk, but has been hit*/
                         this.myGuess[row].splice(col, 1, 1); //hit
-                    }
-                    } else {
+                } else {
                         /*There is no ship there*/
-                        this.myGuess[row].splice(col, 1, 2); //miss
-                    }
-                    //send ship grid
-                    //get back updated color grid and set to our grid
+                    this.myGuess[row].splice(col, 1, 2); //miss
                 }
             }
         },
@@ -92,12 +84,12 @@ var v = new Vue({
             }
         }
     }
-);
+});
 
 socket.on('updateDisplay', function(data){
     //update our displayed grids.
    //myShips = data ? but also update screen ("myships"). 
-})
+});
 
 socket.on('created', function(data){
     //player 1 created a game
