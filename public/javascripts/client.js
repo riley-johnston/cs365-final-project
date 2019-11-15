@@ -46,8 +46,7 @@ var v = new Vue({
                 /*There is no ship there*/
                 this.myGuess[row].splice(col, 1, 2); //miss
             }
-            //send ship grid
-            //get back updated color grid and set to our grid
+            //emit a new guess here
         },
         forfeit(){
             
@@ -68,9 +67,7 @@ var v = new Vue({
             for(var i = 0; i < 2; i++){
                 this.myShips[6].splice(i, 1, 2); //place destroyer
             }
-            socket.emit("updateShips", this.myShips); //move into ready later
         },
-        //this will probably go into the server
         styleFor(typeOfSquare) {
             if(typeOfSquare == 0){
                 return "water";
@@ -99,20 +96,29 @@ socket.on('updateDisplay', function(data){
 })
 
 socket.on('created', function(data){
+    console.log('Game is created');
     //player 1 created a game
 });
 
 socket.on('join', function(data){
+    console.log('p1 joined');
     //player 1 joined game
 });
 
 socket.on('joined', function(data){
+    console.log('p2 joined');
     //p2 join
 });
 
 socket.on("clientDisconnect", function(dataFromServer) {
    //player disconnects
 });
+
+socket.on("ready", function(dataFromServer) {
+    //players are ready and can start guessing 
+    //display guesses board
+ });
+ 
 
 $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);

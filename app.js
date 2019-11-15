@@ -31,6 +31,7 @@ var officialPlayer1;
 var officialPlayer2;
 var p1Guess;
 var p2Guess;
+var playerReady = 0;
 
 
 function guess(ships, guesses){
@@ -58,7 +59,7 @@ io.on("connection", function(socket){
         player1.emit('created'); //First player created game.
         numClients++;
     }
-    else if(numClient == 1){
+    else if(numClients == 1){
         player2 = socket;
         player1.emit('join'); // First player joined game.
         player2.emit('joined'); // 2nd joined
@@ -83,7 +84,7 @@ io.on("connection", function(socket){
     socket.on('newGuess', function(data){
         //update this players guess grid 
         if(socket == player1){
-            p1Guess = guess(officialPlayer1, data);
+            p1Guess = guess(officialPlayer2, data);
             console.log("player 1 guessed");
             player2.emit('updateDisplay', p1Guess);
         }
@@ -101,13 +102,20 @@ io.on("connection", function(socket){
         if(socket == player1){
             console.log("player 1 is ready");
             officialPlayer1 = data;
+            console.log(officialPlayer1);
+            playerReady++;
         }
         else if(socket == player2){
             console.log("player 2 is ready");
             officialPlayer2 = data;
+            console.log(officialPlayer2);
+            playerReady++;
         }
         else{
             console.log("whos playing");
+        }
+        if(playerReady == 2){
+            io.emit('ready'); //say we are ready for guessing!
         }
     });
 });
