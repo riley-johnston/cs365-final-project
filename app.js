@@ -34,21 +34,37 @@ var p2Guess;
 var playerReady = 0;
 
 
-function guess(ships, guesses){
+function player1guess(p1guesses){
     for(var i = 0; i < 10; i++){
         for(var j = 0; j < 10; j++){
-            if(guesses[i][j] != 0){ // no need to update things already guessed.s
-                if(ships[i][j] == " "){
-                    guesses[i][j] = 2; //miss
+            if(p1guesses[i][j] != 0){ // no need to update things already guessed
+                if(officialPlayer1[i][j] == " "){
+                    p1guesses[i][j] = 2; //miss
                 }
                 else{
-                    guesses[i][j] = 1; //hit
+                    p1guesses[i][j] = 1; //hit
                 }
             }
         }
     }
-    console.log(guesses);
-    return guesses;
+    console.log(p1guesses);
+    return p1guesses;
+}
+function player2guess(p2guesses){
+    for(var i = 0; i < 10; i++){
+        for(var j = 0; j < 10; j++){
+            if(p2guesses[i][j] != 0){ // no need to update things already guessed
+                if(officialPlayer2[i][j] == " "){
+                    p2guesses[i][j] = 2; //miss
+                }
+                else{
+                    p2guesses[i][j] = 1; //hit
+                }
+            }
+        }
+    }
+    console.log(p2guesses);
+    return p2guesses;
 }
 
 io.on("connection", function(socket){
@@ -72,7 +88,7 @@ io.on("connection", function(socket){
 		if((player1 != null && socket.id == player1.id) || (player2 != null && socket.id == player2.id )){
 			numClients = 0;
 			io.emit('clientDisconnect'); 
-			console.log("Player 1 disconnected.");
+			console.log("Player disconnected.");
 			player1 = null;
 			player2 = null;
 		}
@@ -84,13 +100,14 @@ io.on("connection", function(socket){
     socket.on('newGuess', function(data){
         //update this players guess grid 
         if(socket == player1){
-            p1Guess = guess(officialPlayer2, data);
+            p1Guess = player1guess(data);
             console.log("player 1 guessed");
             player2.emit('updateDisplay', p1Guess);
         }
         else if(socket == player2){
-            p2Guess = guess(officialPlayer1, data);
+            p2Guess = player2guess(data);
             console.log("player 2 guessed");
+            console.log(p2Guess);
             player1.emit('updateDisplay', p2Guess);
         }
         else{

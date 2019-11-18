@@ -19,6 +19,18 @@ var v = new Vue({
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
+        otherGuess: [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ],
         myShips: [
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -44,6 +56,7 @@ var v = new Vue({
                 }
             }
             //emit a new guess here
+            socket.emit('newGuess', this.myGuess);
         },
         forfeit(){
             
@@ -86,8 +99,11 @@ var v = new Vue({
 });
 
 socket.on('updateDisplay', function(data){
-    //update our displayed grids.
-   //myShips = data ? but also update screen ("myships"). 
+    for(let i = 0; i< 10; i++){
+        for(let j = 0; j< 10; j++){
+            v.otherGuess[i].splice(j, 1, data[i][j]); 
+        }
+    }
 });
 
 socket.on('created', function(data){
@@ -112,6 +128,7 @@ socket.on("clientDisconnect", function(dataFromServer) {
 socket.on("ready", function(dataFromServer) {
     //players are ready and can start guessing 
     //display guesses board
+    $("#table1").css("display", "block");
  });
  
 
