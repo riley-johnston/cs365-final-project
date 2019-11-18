@@ -1,8 +1,8 @@
-var mongodb = require("mongodb");
+/*var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 var ObjectID = mongodb.ObjectID;
 var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
-var db;
+var db;*/
 
 var express = require('express');
 var path = require('path');

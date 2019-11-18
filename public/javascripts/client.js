@@ -131,7 +131,7 @@ socket.on("ready", function(dataFromServer) {
     $("#table1").css("display", "block");
  });
 
- socket.on("setLeaderboard", function(leaderboard){
+ /*socket.on("setLeaderboard", function(leaderboard){
      //Add a player to the leaderboard.
      $("#theLeaderboard").html("");
      for(let player of leaderboard){
@@ -162,7 +162,7 @@ $("#login").click(function(){
     socket.emit("login", player);
 
     $("#username").val("");
-})
+})*/
 
 $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);
