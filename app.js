@@ -32,6 +32,7 @@ var officialPlayer2;
 var p1Guess;
 var p2Guess;
 var playerReady = 0;
+var playerTurn = 0; // 0 is p1, 1 is p2
 
 
 function player1guess(p1guesses){
@@ -82,7 +83,7 @@ io.on("connection", function(socket){
         numClients++;
     }
     else{
-        //socket.emit('');
+        socket.emit('wait');
     }
     socket.on("disconnect", function() {
 		if((player1 != null && socket.id == player1.id) || (player2 != null && socket.id == player2.id )){
@@ -99,19 +100,32 @@ io.on("connection", function(socket){
 
     socket.on('newGuess', function(data){
         //update this players guess grid 
-        if(socket == player1){
-            p1Guess = player1guess(data);
-            console.log("player 1 guessed");
-            player2.emit('updateDisplay', p1Guess);
-        }
-        else if(socket == player2){
-            p2Guess = player2guess(data);
-            console.log("player 2 guessed");
-            console.log(p2Guess);
-            player1.emit('updateDisplay', p2Guess);
-        }
-        else{
-            console.log("whos playing");
+        if(playerTurn){
+            if(socket == player2){
+                p2Guess = player2guess(data);
+                console.log("player 2 guessed");
+                console.log(p2Guess);
+                player1.emit('updateDisplay', p2Guess);
+                //p1 turn now
+                player1.emit('yourTurn');
+                player2.emit('notTurn');
+                playerTurn = 0;
+            }else{
+                //p1 guessed on not their turn :(
+            }
+        }else{
+            if(socket == player1){
+                p1Guess = player1guess(data);
+                console.log("player 1 guessed");
+                player2.emit('updateDisplay', p1Guess);
+                //p2 turn now
+                player2.emit('yourTurn');
+                player1.emit('notTurn');
+                playerTurn = 1;
+            }
+            else if(socket == player2){
+                //not their turn :(
+            }
         }
     });
     
@@ -133,6 +147,8 @@ io.on("connection", function(socket){
         }
         if(playerReady == 2){
             io.emit('ready'); //say we are ready for guessing!
+            player1.emit('yourTurn');
+            player2.emit('notTurn');
         }
     });
 });

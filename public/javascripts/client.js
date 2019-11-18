@@ -107,16 +107,19 @@ socket.on('updateDisplay', function(data){
 });
 
 socket.on('created', function(data){
+    $("h3").text("Waiting for player 2.");
     console.log('Game is created');
     //player 1 created a game
 });
 
 socket.on('join', function(data){
+    $("h3").text("Hello player 1!");
     console.log('p1 joined');
     //player 1 joined game
 });
 
 socket.on('joined', function(data){
+    $("h3").text("Hello player 2!");
     console.log('p2 joined');
     //p2 join
 });
@@ -126,9 +129,25 @@ socket.on("clientDisconnect", function(dataFromServer) {
 });
 
 socket.on("ready", function(dataFromServer) {
-    //players are ready and can start guessing 
-    //display guesses board
+    //how to get players to take turns?
+    $("h3").text("Ready to play!");
     $("#table1").css("display", "block");
+ });
+
+ socket.on("yourTurn", function(data){
+    $("h3").text("Your turn!");
+    $("#table1").css("pointer-events" ,"auto");
+ });
+
+ socket.on("notTurn", function(data){
+    $("h3").text("Wait for your turn!");
+    $("#table1").css("pointer-events" ,"none"); //make table unclickable
+ })
+
+ socket.on("wait", function(dataFromServer) {
+    $("h3").text("Game is full.");
+    $("#myTable5").css("visibility", "hidden");
+    $("#table2").css("display", "none");
  });
  
 
