@@ -5,6 +5,9 @@ body {
   padding: 15px;
   font-family: 'Courier New', Courier, monospace;
 }
+#table1{
+  display: none;
+}
 #grids{
   background-color: white;
   border: 1px solid black;
