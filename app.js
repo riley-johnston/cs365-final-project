@@ -1,3 +1,9 @@
+var mongodb = require("mongodb");
+var MongoClient = mongodb.MongoClient;
+var ObjectID = mongodb.ObjectID;
+var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
+var db;
+
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -50,6 +56,30 @@ function guess(ships, guesses){
     console.log(guesses);
     return guesses;
 }
+
+/* ALL OF THE FOLLOWING IS NOT COMPLETED YET.
+function sendLeaderboardToClient(theSocket){
+    db.collection("players").find({}, {sort: [['wins', -1], ['standing', 1]]}).toArray(function(error, documents){
+        if(error != null){
+            console.log(error);
+        }
+        else if(theSocket == null){
+            io.emit("setLeaderboard", documents);
+        }
+        else{
+            theSocket.emit("setLeaderboard", documents);
+        }
+    });
+}
+
+function updateClientIfNoError(error, result){
+    if(error != null){
+        console.log(error);
+    }
+    else{
+        sendLeaderboardToClient(null);
+    }
+}*/
 
 io.on("connection", function(socket){
     console.log("Someone connected!");

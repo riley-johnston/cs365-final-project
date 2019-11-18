@@ -113,7 +113,39 @@ socket.on("ready", function(dataFromServer) {
     //players are ready and can start guessing 
     //display guesses board
  });
- 
+
+ socket.on("setLeaderboard", function(leaderboard){
+     //Add a player to the leaderboard.
+     $("#theLeaderboard").html("");
+     for(let player of leaderboard){
+         var tdUsername = $("<td></td>").text(player.username);
+         var tdWins = $("<td></td>").text(player.wins);
+         var tdLoss = $("<td></td>").text(player.losses);
+
+         var tr = $("<tr></tr>")
+            .append(tdUsername)
+            .append(tdWins)
+            .append(tdLoss);
+
+        $("#theLeaderboard").append(tr);
+     }
+
+     console.log(leaderboard);
+ });
+
+$("#login").click(function(){
+    //When a player clicks the login function
+    //create a player collection and set 
+    //username, wins, and losses.
+    var player = {};
+    player.username = $("username").val();
+    player.wins = 0;
+    player.losses = 0;
+
+    socket.emit("login", player);
+
+    $("#username").val("");
+})
 
 $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);
