@@ -1,6 +1,7 @@
 var socket = io();
 //
-//import { Socket } from "dgram";
+//
+//to track hit coordinates!
 
 var v = new Vue({
     el: '#app',
@@ -50,13 +51,17 @@ var v = new Vue({
                 if(this.myShips[row][col] != " "){
                         /*The ship has not been sunk, but has been hit*/
                         this.myGuess[row].splice(col, 1, 1); //hit
+                        socket.emit('hit', {row, col});
+                        //check status?
                 } else {
                         /*There is no ship there*/
                     this.myGuess[row].splice(col, 1, 2); //miss
                 }
             }
-            //emit a new guess here
             socket.emit('newGuess', this.myGuess);
+        },
+        checkStatus(){
+            
         },
         forfeit(){
             
@@ -65,14 +70,14 @@ var v = new Vue({
             for(var i = 0; i < 5; i++){
                 this.myShips[i].splice(2, 1, "5"); //place carrier
             }
-            for(var i = 6; i < 9; i++){
-                this.myShips[5].splice(i, 1, "3"); //place cruiser
+           for(var i = 6; i < 9; i++){
+                this.myShips[5].splice(i, 1, "3A"); //place cruiser
             }
             for(var i = 6; i < 10; i++){
                 this.myShips[9].splice(i, 1, "4"); //place battleship
             }
             for(var i = 3; i < 6; i++){
-                this.myShips[i].splice(9, 1, "3"); //place submarine
+                this.myShips[i].splice(9, 1, "3B"); //place submarine
             }
             for(var i = 0; i < 2; i++){
                 this.myShips[6].splice(i, 1, "2"); //place destroyer

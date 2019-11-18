@@ -39,7 +39,208 @@ var p1Guess;
 var p2Guess;
 var playerReady = 0;
 var playerTurn = 0; // 0 is p1, 1 is p2
+var p1ships ={
+    carrier: {
+        coord1: null,
+        coord2: null,
+        coord3: null,
+        coord4: null,
+        coord5: null
+    },
+    battleship: {
+        coord1: null,
+        coord2: null,
+        coord3: null,
+        coord4: null
+    },
+    cruiser: {
+        coord1: null,
+        coord2: null,
+        coord3: null
+    },
+    submarine: {
+        coord1: null,
+        coord2: null,
+        coord3: null
+    },
+    destroyer: {
+        coord1: null,
+        coord2: null
+    }
+}
+var p2ships ={
+    carrier: {
+        coord1: null,
+        coord2: null,
+        coord3: null,
+        coord4: null,
+        coord5: null
+    },
+    battleship: {
+        coord1: null,
+        coord2: null,
+        coord3: null,
+        coord4: null
+    },
+    cruiser: {
+        coord1: null,
+        coord2: null,
+        coord3: null
+    },
+    submarine: {
+        coord1: null,
+        coord2: null,
+        coord3: null
+    },
+    destroyer: {
+        coord1: null,
+        coord2: null
+    }
+}
 
+function p1hit(r, c){
+    console.log("hit!");
+    console.log(r + " " + c);
+    console.log(officialPlayer2);
+    if(officialPlayer2[r][c] == "2"){
+        if(!p1ships.destroyer.coord1){
+            p1ships.destroyer.coord1 = [r, c];
+        }
+        else{
+            p1ships.destroyer.coord2 = [r, c];
+        }
+        console.log(p1ships.destroyer);
+    }
+    else if(officialPlayer2[r][c] == "3B"){
+        if(!p1ships.submarine.coord1){
+            p1ships.submarine.coord1 = [r, c];
+        }
+        else if(!p1ships.submarine.coord2){
+            p1ships.submarine.coord2 = [r, c];
+        }
+        else{
+            p1ships.submarine.coord3 = [r, c];
+        }
+        console.log(p1ships.submarine);
+    }
+    else if(officialPlayer2[r][c] == "3A"){
+        if(!p1ships.cruiser.coord1){
+            p1ships.cruiser.coord1 = [r, c];
+        }
+        else if(!cruiser.coord2){
+            p1ships.cruiser.coord2 = [r, c];
+        }
+        else{
+            p1ships.cruiser.coord3 = [r, c];
+        }
+        console.log(p1ships.cruiser);
+    }
+    else if(officialPlayer2[r][c] == "4"){
+        if(!p1ships.battleship.coord1){
+            p1ships.battleship.coord1 = [r, c];
+        }
+        else if(!p1ships.battleship.coord2){
+            p1ships.battleship.coord2 = [r, c];
+        }
+        else if(!p1ships.battleship.coord3){
+            p1ships.battleship.coord3 = [r, c];
+        }
+        else{
+            p1ships.battleship.coord4 = [r, c];
+        }
+        console.log(p1ships.battleship);
+    }
+    else{
+        if(!p1ships.carrier.coord1){
+            p1ships.carrier.coord1 = [r, c];
+        }
+        else if(!p1ships.carrier.coord2){
+            p1ships.carrier.coord2 = [r, c];
+        }
+        else if(!p1ships.carrier.coord3){
+            p1ships.carrier.coord3 = [r, c];
+        }
+        else if(!p1ships.carrier.coord4){
+            p1ships.carrier.coord4 = [r, c];
+        }
+        else{
+            p1ships.carrier.coord5 = [r, c];
+        }
+        console.log(p1ships.carrier);
+    }
+}
+
+function p2hit(r, c){
+    console.log("hit!");
+    console.log(r + " " + c);
+    console.log(officialPlayer1);
+    if(officialPlayer1[r][c] == "2"){
+        if(!p2ships.destroyer.coord1){
+            p2ships.destroyer.coord1 = [r, c];
+        }
+        else{
+            p2ships.destroyer.coord2 = [r, c];
+        }
+        console.log(p2ships.destroyer);
+    }
+    else if(officialPlayer1[r][c] == "3B"){
+        if(!p2ships.submarine.coord1){
+            p2ships.submarine.coord1 = [r, c];
+        }
+        else if(!p2ships.submarine.coord2){
+            p2ships.submarine.coord2 = [r, c];
+        }
+        else{
+            p2ships.submarine.coord3 = [r, c];
+        }
+        console.log(p2ships.submarine);
+    }
+    else if(officialPlayer1[r][c] == "3A"){
+        if(!p2ships.cruiser.coord1){
+            p2ships.cruiser.coord1 = [r, c];
+        }
+        else if(!cruiser.coord2){
+            p2ships.cruiser.coord2 = [r, c];
+        }
+        else{
+            p2ships.cruiser.coord3 = [r, c];
+        }
+        console.log(p1ships.cruiser);
+    }
+    else if(officialPlayer1[r][c] == "4"){
+        if(!p2ships.battleship.coord1){
+            p2ships.battleship.coord1 = [r, c];
+        }
+        else if(!p2ships.battleship.coord2){
+            p2ships.battleship.coord2 = [r, c];
+        }
+        else if(!p2ships.battleship.coord3){
+            p2ships.battleship.coord3 = [r, c];
+        }
+        else{
+            p2ships.battleship.coord4 = [r, c];
+        }
+        console.log(p2ships.battleship);
+    }
+    else{
+        if(!p2ships.carrier.coord1){
+            p2ships.carrier.coord1 = [r, c];
+        }
+        else if(!p2ships.carrier.coord2){
+            p2ships.carrier.coord2 = [r, c];
+        }
+        else if(!p2ships.carrier.coord3){
+            p2ships.carrier.coord3 = [r, c];
+        }
+        else if(!p2ships.carrier.coord4){
+            p2ships.carrier.coord4 = [r, c];
+        }
+        else{
+            p2ships.carrier.coord5 = [r, c];
+        }
+        console.log(p2ships.carrier);
+    }
+}
 
 function player1guess(p1guesses){
     for(var i = 0; i < 10; i++){
@@ -125,6 +326,19 @@ io.on("connection", function(socket){
 		}
 		else{
 			console.log("someone disconnected.");
+        }
+    });
+
+    socket.on('hit', function(data){
+        console.log(data);
+        if(socket == player1){
+            p1hit(data.row, data.col);
+        }
+        else if(socket == player2){
+            p2hit(data.row, data.col);
+        }
+        else{
+            console.log(":(")
         }
     });
 

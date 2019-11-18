@@ -75,11 +75,11 @@
               </tr>
               <tr>
                 <td style="background-color:#0086c3;color: white">Cruiser</td>
-                <td>3</td>
+                <td>3A</td>
               </tr>
               <tr>
                 <td style="background-color:#0086c3;color: white">Submarine</td>
-                <td>3</td>
+                <td>3B</td>
               </tr>
               <tr>
                 <td style="background-color:#0086c3;color: white">Destroyer</td>
@@ -112,7 +112,7 @@
               </tr>
             </table>
         </div>
-        <div>
+        <div id="table5">
           <table id="myTable5">
             <thead>
               <tr>
@@ -129,16 +129,17 @@
                   <td>
                     <button  id = "random" class="optionbtn" v-on:click="randomPlacement()">Place Ships</button> 
                   </td>
-                </tr>
-                <tr>
-                    <td>
-                      <button id = "ready" class="optionbtn">Ready to play!</button>
-                    </td>
-                  </tr>
+              </tr>
+              <tr>
+                <td>
+                  <button id = "ready" class="optionbtn">Ready to play!</button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
     </div>
+  </div> <!--END APP-->
     <!--<table>
 			<thead>
 				<tr>
@@ -152,8 +153,8 @@
 		</table>
   </div>-->
 </body>
-    <script src="javascripts/jquery-3.4.1.js"></script>
+    <script src="javascripts/jquery-3.4.1.js" type="text/javascript"></script>
     <script src="/socket.io/socket.io.js" type="text/javascript"></script>
-    <script src="javascripts/vue.js"></script>
-    <script src="javascripts/client.js"></script>
+    <script src="javascripts/vue.js" type="text/javascript"></script>
+    <script src="javascripts/client.js" type="text/javascript"></script>
 </html>
