@@ -51,14 +51,12 @@ var v = new Vue({
                 if(this.myShips[row][col] != " "){
                         /*The ship has not been sunk, but has been hit*/
                         this.myGuess[row].splice(col, 1, 1); //hit
-                        socket.emit('hit', {row, col});
-                        //check status?
                 } else {
                         /*There is no ship there*/
                     this.myGuess[row].splice(col, 1, 2); //miss
                 }
             }
-            socket.emit('newGuess', this.myGuess);
+            socket.emit('newGuess', {row, col});
         },
         checkStatus(){
             
@@ -103,6 +101,12 @@ var v = new Vue({
     }
 });
 
+socket.on('sunk', function(data){
+    for(var i = 0; i < data.size; i++){
+        var coord = (Object.values(data.ship)[i]);
+        v.myGuess[coord[0]].splice(coord[1], 1, 3); // 3 = sunk;
+    }
+});
 socket.on('updateDisplay', function(data){
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
@@ -110,7 +114,6 @@ socket.on('updateDisplay', function(data){
         }
     }
 });
-
 socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
     console.log('Game is created');

@@ -3,7 +3,7 @@ var MongoClient = mongodb.MongoClient;
 var ObjectID = mongodb.ObjectID;
 var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
 var db;*/
-
+{
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -29,16 +29,40 @@ var socketio = require("socket.io");
 var io = socketio(server);
 
 module.exports = app;
-
+}
 var numClients = 0;
 var player1;
 var player2;
-var officialPlayer1;
+var officialPlayer1;  
 var officialPlayer2;
-var p1Guess;
-var p2Guess;
+var p1Guess = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
+var p2Guess = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
 var playerReady = 0;
 var playerTurn = 0; // 0 is p1, 1 is p2
+var p1sunk = 0;
+var p2sunk = 0;
 var p1ships ={
     carrier: {
         coord1: null,
@@ -100,16 +124,14 @@ var p2ships ={
 
 function p1hit(r, c){
     console.log("hit!");
-    console.log(r + " " + c);
-    console.log(officialPlayer2);
     if(officialPlayer2[r][c] == "2"){
         if(!p1ships.destroyer.coord1){
             p1ships.destroyer.coord1 = [r, c];
         }
         else{
             p1ships.destroyer.coord2 = [r, c];
+            sunk(2, p1ships.destroyer, player1);
         }
-        console.log(p1ships.destroyer);
     }
     else if(officialPlayer2[r][c] == "3B"){
         if(!p1ships.submarine.coord1){
@@ -120,20 +142,20 @@ function p1hit(r, c){
         }
         else{
             p1ships.submarine.coord3 = [r, c];
+            sunk(3, p1ships.submarine, player1);
         }
-        console.log(p1ships.submarine);
     }
     else if(officialPlayer2[r][c] == "3A"){
         if(!p1ships.cruiser.coord1){
             p1ships.cruiser.coord1 = [r, c];
         }
-        else if(!cruiser.coord2){
+        else if(!p1ships.cruiser.coord2){
             p1ships.cruiser.coord2 = [r, c];
         }
         else{
             p1ships.cruiser.coord3 = [r, c];
+            sunk(3, p1ships.cruiser, player1);
         }
-        console.log(p1ships.cruiser);
     }
     else if(officialPlayer2[r][c] == "4"){
         if(!p1ships.battleship.coord1){
@@ -147,8 +169,8 @@ function p1hit(r, c){
         }
         else{
             p1ships.battleship.coord4 = [r, c];
+            sunk(4, p1ships.battleship, player1);
         }
-        console.log(p1ships.battleship);
     }
     else{
         if(!p1ships.carrier.coord1){
@@ -165,23 +187,21 @@ function p1hit(r, c){
         }
         else{
             p1ships.carrier.coord5 = [r, c];
+            sunk(5, p1ships.carrier, player1);
         }
-        console.log(p1ships.carrier);
     }
 }
 
 function p2hit(r, c){
     console.log("hit!");
-    console.log(r + " " + c);
-    console.log(officialPlayer1);
     if(officialPlayer1[r][c] == "2"){
         if(!p2ships.destroyer.coord1){
             p2ships.destroyer.coord1 = [r, c];
         }
         else{
             p2ships.destroyer.coord2 = [r, c];
+            sunk(2, p2ships.destroyer, player2);
         }
-        console.log(p2ships.destroyer);
     }
     else if(officialPlayer1[r][c] == "3B"){
         if(!p2ships.submarine.coord1){
@@ -192,20 +212,20 @@ function p2hit(r, c){
         }
         else{
             p2ships.submarine.coord3 = [r, c];
+            sunk(3, p2ships.submarine, player2);
         }
-        console.log(p2ships.submarine);
     }
     else if(officialPlayer1[r][c] == "3A"){
         if(!p2ships.cruiser.coord1){
             p2ships.cruiser.coord1 = [r, c];
         }
-        else if(!cruiser.coord2){
+        else if(!p2ships.cruiser.coord2){
             p2ships.cruiser.coord2 = [r, c];
         }
         else{
             p2ships.cruiser.coord3 = [r, c];
+            sunk(3, p2ships.cruiser, player2);
         }
-        console.log(p1ships.cruiser);
     }
     else if(officialPlayer1[r][c] == "4"){
         if(!p2ships.battleship.coord1){
@@ -219,8 +239,8 @@ function p2hit(r, c){
         }
         else{
             p2ships.battleship.coord4 = [r, c];
+            sunk(4, p2ships.battleship, player2);
         }
-        console.log(p2ships.battleship);
     }
     else{
         if(!p2ships.carrier.coord1){
@@ -237,42 +257,37 @@ function p2hit(r, c){
         }
         else{
             p2ships.carrier.coord5 = [r, c];
+            sunk(5, p2ships.carrier, player2);
         }
-        console.log(p2ships.carrier);
     }
 }
 
-function player1guess(p1guesses){
-    for(var i = 0; i < 10; i++){
-        for(var j = 0; j < 10; j++){
-            if(p1guesses[i][j] != 0){ // no need to update things already guessed
-                if(officialPlayer1[i][j] == " "){
-                    p1guesses[i][j] = 2; //miss
-                }
-                else{
-                    p1guesses[i][j] = 1; //hit
-                }
-            }
-        }
-    }
-    console.log(p1guesses);
-    return p1guesses;
+function sunk(size, ship, player){
+    console.log("sunk!");
+    player.emit('sunk', {size, ship});
 }
-function player2guess(p2guesses){
-    for(var i = 0; i < 10; i++){
-        for(var j = 0; j < 10; j++){
-            if(p2guesses[i][j] != 0){ // no need to update things already guessed
-                if(officialPlayer2[i][j] == " "){
-                    p2guesses[i][j] = 2; //miss
-                }
-                else{
-                    p2guesses[i][j] = 1; //hit
-                }
-            }
+
+function player1guess(r,c){
+    if(p1Guess[r][c] == 0){ // no need to update things already guessed
+        if(officialPlayer2[r][c] == " "){
+            p1Guess[r][c] = 2; //miss
+        }
+        else{
+            p1Guess[r][c] = 1; //hit
+            p1hit(r,c); //adds coords to ship object
         }
     }
-    console.log(p2guesses);
-    return p2guesses;
+}
+function player2guess(r,c){
+    if(p2Guess[r][c] == 0){ // no need to update things already guessed
+        if(officialPlayer1[r][c] == " "){ //if theres nothing in p1 
+            p2Guess[r][c] = 2; //miss
+        }
+        else{
+            p2Guess[r][c] = 1; //hit
+            p2hit(r,c); //adds coords to ship object
+        }
+    }
 }
 
 /* ALL OF THE FOLLOWING IS NOT COMPLETED YET.
@@ -301,7 +316,6 @@ function updateClientIfNoError(error, result){
 
 io.on("connection", function(socket){
     console.log("Someone connected!");
-
     if (numClients == 0){
         player1 = socket;
         player1.emit('created'); //First player created game.
@@ -328,62 +342,32 @@ io.on("connection", function(socket){
 			console.log("someone disconnected.");
         }
     });
-
-    socket.on('hit', function(data){
-        console.log(data);
-        if(socket == player1){
-            p1hit(data.row, data.col);
-        }
-        else if(socket == player2){
-            p2hit(data.row, data.col);
-        }
-        else{
-            console.log(":(")
-        }
-    });
-
     socket.on('newGuess', function(data){
-        //update this players guess grid 
         if(playerTurn){
             if(socket == player2){
-                p2Guess = player2guess(data);
-                console.log("player 2 guessed");
-                console.log(p2Guess);
+                player2guess(data.row, data.col);
                 player1.emit('updateDisplay', p2Guess);
-                //p1 turn now
                 player1.emit('yourTurn');
                 player2.emit('notTurn');
                 playerTurn = 0;
-            }else{
-                //p1 guessed on not their turn :(
             }
         }else{
             if(socket == player1){
-                p1Guess = player1guess(data);
-                console.log("player 1 guessed");
+                player1guess(data.row, data.col);
                 player2.emit('updateDisplay', p1Guess);
-                //p2 turn now
                 player2.emit('yourTurn');
                 player1.emit('notTurn');
                 playerTurn = 1;
             }
-            else if(socket == player2){
-                //not their turn :(
-            }
         }
     });
-    
     socket.on('updateShips', function(data){
         if(socket == player1){
-            console.log("player 1 is ready");
             officialPlayer1 = data;
-            console.log(officialPlayer1);
             playerReady++;
         }
         else if(socket == player2){
-            console.log("player 2 is ready");
             officialPlayer2 = data;
-            console.log(officialPlayer2);
             playerReady++;
         }
         else{
@@ -396,8 +380,6 @@ io.on("connection", function(socket){
         }
     });
 });
-
-
 server.listen(80, function() {
     console.log("Server is waiting on port 80");
 });
