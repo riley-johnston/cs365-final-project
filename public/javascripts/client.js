@@ -1,10 +1,7 @@
 var socket = io();
+//THIS GETS THE PAGE TO RELOAD IF SERVER CRASHES/IS TAKEN DOWN
 var serverStamp = null;
-//
-//
-//to track hit coordinates!
-
-socket.on("connect", function(){ //THIS GETS THE PAGE TO RELOAD IF SERVER CRASHES/IS TAKEN DOWN
+socket.on("connect", function(){ 
     socket.emit("getTimeStamp", function(stamp){
         if(serverStamp == null){
             serverStamp = stamp;
@@ -12,17 +9,12 @@ socket.on("connect", function(){ //THIS GETS THE PAGE TO RELOAD IF SERVER CRASHE
         else if(serverStamp != stamp){
             location.reload(true);
         }
-        else{
-            //dont need to reload
-        }
     })
 });
 
 var v = new Vue({
     el: '#app',
     data:{
-        numPlayers: 0,
-        color: "water",
         myGuess: [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -71,15 +63,14 @@ var v = new Vue({
         forfeit(){
             
         },
-        clearShips(){
-            console.log("clearing");
+        clearShips(){ //clears board when deciding ship placement
             for(var i = 0; i < 10; i++){
                 for(var j = 0; j < 10; j++){
-                    this.myShips[i].splice(j, 1, " "); //clears board when deciding ship placement
+                    this.myShips[i].splice(j, 1, " "); 
                 }
             }
         },
-        randomPlacement(){
+        randomPlacement(){ //cycles through ship placements
             this.clearShips();
             if(this.layout < 1){ 
                 this.layout++;
@@ -87,7 +78,6 @@ var v = new Vue({
             else{ 
                 this.layout = 0; 
             }
-            console.log(this.layout);
             if(this.layout == 0){
                 for(var i = 0; i < 5; i++){
                     this.myShips[i].splice(2, 1, "5"); //place carrier
@@ -147,6 +137,7 @@ socket.on('win', function(data){
 socket.on('lose', function(data){
     //change client screen to say lose, give option to reconnect?
 });
+//updates the guess grid displayed under your ships
 socket.on('otherGuess', function(data){
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
@@ -154,6 +145,7 @@ socket.on('otherGuess', function(data){
         }
     }
 });
+//updates the guess grid displayed on your playable grid
 socket.on('myGuess', function(data){
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
@@ -191,7 +183,7 @@ socket.on("ready", function(dataFromServer) {
 
  socket.on("yourTurn", function(data){
     $("h3").text("Your turn!");
-    $("#table1").css("pointer-events" ,"auto");
+    $("#table1").css("pointer-events" ,"auto"); //makes table clickable
  });
 
  socket.on("notTurn", function(data){

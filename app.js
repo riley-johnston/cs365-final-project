@@ -286,7 +286,7 @@ function sunk(size, ship, player){
     checkWin();
 }
 
-function checkWin(){
+function checkWin(){ //NEED TO CONTINUE WRITING THIS
     if(p1sunk == 5){
         console.log("P1 win");
         player1.emit('win');
