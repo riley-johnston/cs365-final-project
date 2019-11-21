@@ -3,6 +3,8 @@ var MongoClient = mongodb.MongoClient;
 var ObjectID = mongodb.ObjectID;
 var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
 var db;*/
+
+var startTime = Date.now();
 {
 var express = require('express');
 var path = require('path');
@@ -31,10 +33,13 @@ var io = socketio(server);
 module.exports = app;
 }
 var numClients = 0;
-var player1;
+//sockets
+var player1; 
 var player2;
+//ship placements
 var officialPlayer1;  
 var officialPlayer2;
+//guesses
 var p1Guess = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -63,6 +68,7 @@ var playerReady = 0;
 var playerTurn = 0; // 0 is p1, 1 is p2
 var p1sunk = 0;
 var p2sunk = 0;
+//hit ships
 var p1ships ={
     carrier: {
         coord1: null,
@@ -121,7 +127,6 @@ var p2ships ={
         coord2: null
     }
 }
-
 function p1hit(r, c){
     console.log("hit!");
     if(officialPlayer2[r][c] == "2"){
@@ -191,7 +196,6 @@ function p1hit(r, c){
         }
     }
 }
-
 function p2hit(r, c){
     console.log("hit!");
     if(officialPlayer1[r][c] == "2"){
@@ -264,7 +268,33 @@ function p2hit(r, c){
 
 function sunk(size, ship, player){
     console.log("sunk!");
-    player.emit('sunk', {size, ship});
+    if(player == player1){
+        for(var i = 0; i < size; i++){
+            var coord = (Object.values(ship)[i]);
+            p1Guess[coord[0]].splice(coord[1], 1, 3); // 3 = sunk;
+        }
+        p1sunk++;
+        //console.log(p1ships.ship);
+        //player1.emit('youSunk', ship.name)
+    }else{
+        for(var i = 0; i < size; i++){
+            var coord = (Object.values(ship)[i]);
+            p2Guess[coord[0]].splice(coord[1], 1, 3); // 3 = sunk;
+        }
+        p2sunk++;
+    }
+    checkWin();
+}
+
+function checkWin(){
+    if(p1sunk == 5){
+        console.log("P1 win");
+        player1.emit('win');
+        player2.emit('lose');
+    }
+    else if(p2sunk == 5){
+        console.log("P2 win");
+    }
 }
 
 function player1guess(r,c){
@@ -328,8 +358,13 @@ io.on("connection", function(socket){
         numClients++;
     }
     else{
-        socket.emit('wait');
+        socket.emit('wait'); 
     }
+
+    socket.on("getTimeStamp", function(callback){
+        callback(startTime);
+    });
+
     socket.on("disconnect", function() {
 		if((player1 != null && socket.id == player1.id) || (player2 != null && socket.id == player2.id )){
 			numClients = 0;
@@ -346,7 +381,8 @@ io.on("connection", function(socket){
         if(playerTurn){
             if(socket == player2){
                 player2guess(data.row, data.col);
-                player1.emit('updateDisplay', p2Guess);
+                player1.emit('otherGuess', p2Guess);
+                player2.emit('myGuess', p2Guess);
                 player1.emit('yourTurn');
                 player2.emit('notTurn');
                 playerTurn = 0;
@@ -354,7 +390,8 @@ io.on("connection", function(socket){
         }else{
             if(socket == player1){
                 player1guess(data.row, data.col);
-                player2.emit('updateDisplay', p1Guess);
+                player2.emit('otherGuess', p1Guess);
+                player1.emit('myGuess', p1Guess);
                 player2.emit('yourTurn');
                 player1.emit('notTurn');
                 playerTurn = 1;
@@ -369,9 +406,6 @@ io.on("connection", function(socket){
         else if(socket == player2){
             officialPlayer2 = data;
             playerReady++;
-        }
-        else{
-            console.log("whos playing");
         }
         if(playerReady == 2){
             io.emit('ready'); //say we are ready for guessing!

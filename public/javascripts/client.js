@@ -1,7 +1,22 @@
 var socket = io();
+var serverStamp = null;
 //
 //
 //to track hit coordinates!
+
+socket.on("connect", function(){ //THIS GETS THE PAGE TO RELOAD IF SERVER CRASHES/IS TAKEN DOWN
+    socket.emit("getTimeStamp", function(stamp){
+        if(serverStamp == null){
+            serverStamp = stamp;
+        }
+        else if(serverStamp != stamp){
+            location.reload(true);
+        }
+        else{
+            //dont need to reload
+        }
+    })
+});
 
 var v = new Vue({
     el: '#app',
@@ -43,19 +58,11 @@ var v = new Vue({
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
-        ]
+        ],
+        layout: 0
     },
     methods: {
-        changeResult(row, col){
-            if(this.myGuess[row][col] == 0){
-                if(this.myShips[row][col] != " "){
-                        /*The ship has not been sunk, but has been hit*/
-                        this.myGuess[row].splice(col, 1, 1); //hit
-                } else {
-                        /*There is no ship there*/
-                    this.myGuess[row].splice(col, 1, 2); //miss
-                }
-            }
+        changeResult(row, col){ 
             socket.emit('newGuess', {row, col});
         },
         checkStatus(){
@@ -64,21 +71,55 @@ var v = new Vue({
         forfeit(){
             
         },
+        clearShips(){
+            console.log("clearing");
+            for(var i = 0; i < 10; i++){
+                for(var j = 0; j < 10; j++){
+                    this.myShips[i].splice(j, 1, " "); //clears board when deciding ship placement
+                }
+            }
+        },
         randomPlacement(){
-            for(var i = 0; i < 5; i++){
-                this.myShips[i].splice(2, 1, "5"); //place carrier
+            this.clearShips();
+            if(this.layout < 1){ 
+                this.layout++;
             }
-           for(var i = 6; i < 9; i++){
-                this.myShips[5].splice(i, 1, "3A"); //place cruiser
+            else{ 
+                this.layout = 0; 
             }
-            for(var i = 6; i < 10; i++){
-                this.myShips[9].splice(i, 1, "4"); //place battleship
-            }
-            for(var i = 3; i < 6; i++){
-                this.myShips[i].splice(9, 1, "3B"); //place submarine
-            }
-            for(var i = 0; i < 2; i++){
-                this.myShips[6].splice(i, 1, "2"); //place destroyer
+            console.log(this.layout);
+            if(this.layout == 0){
+                for(var i = 0; i < 5; i++){
+                    this.myShips[i].splice(2, 1, "5"); //place carrier
+                }
+               for(var i = 6; i < 9; i++){
+                    this.myShips[5].splice(i, 1, "3A"); //place cruiser
+                }
+                for(var i = 6; i < 10; i++){
+                    this.myShips[9].splice(i, 1, "4"); //place battleship
+                }
+                for(var i = 3; i < 6; i++){
+                    this.myShips[i].splice(9, 1, "3B"); //place submarine
+                }
+                for(var i = 0; i < 2; i++){
+                    this.myShips[6].splice(i, 1, "2"); //place destroyer
+                }
+            }else if(this.layout == 1){
+                for(var i = 1; i < 6; i++){
+                    this.myShips[2].splice(i, 1, "5"); //place carrier
+                }
+               for(var i = 1; i < 4; i++){
+                    this.myShips[0].splice(i, 1, "3A"); //place cruiser
+                }
+                for(var i = 5; i < 9; i++){
+                    this.myShips[i].splice(4, 1, "4"); //place battleship
+                }
+                for(var i = 3; i < 6; i++){
+                    this.myShips[i].splice(8, 1, "3B"); //place submarine
+                }
+                for(var i = 4; i < 6; i++){
+                    this.myShips[i].splice(2, 1, "2"); //place destroyer
+                }
             }
         },
         styleFor(typeOfSquare) {
@@ -100,17 +141,23 @@ var v = new Vue({
         }
     }
 });
-
-socket.on('sunk', function(data){
-    for(var i = 0; i < data.size; i++){
-        var coord = (Object.values(data.ship)[i]);
-        v.myGuess[coord[0]].splice(coord[1], 1, 3); // 3 = sunk;
-    }
+socket.on('win', function(data){
+    //change client screen to say win and give option to add to leaderboard? disconnect when going to leaderboard or option to reconnet.
 });
-socket.on('updateDisplay', function(data){
+socket.on('lose', function(data){
+    //change client screen to say lose, give option to reconnect?
+});
+socket.on('otherGuess', function(data){
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
             v.otherGuess[i].splice(j, 1, data[i][j]); 
+        }
+    }
+});
+socket.on('myGuess', function(data){
+    for(let i = 0; i< 10; i++){
+        for(let j = 0; j< 10; j++){
+            v.myGuess[i].splice(j, 1, data[i][j]); 
         }
     }
 });
