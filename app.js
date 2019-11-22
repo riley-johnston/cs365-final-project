@@ -283,19 +283,8 @@ function sunk(size, ship, player){
         }
         p2sunk++;
     }
-    checkWin();
 }
 
-function checkWin(){ //NEED TO CONTINUE WRITING THIS
-    if(p1sunk == 5){
-        console.log("P1 win");
-        player1.emit('win');
-        player2.emit('lose');
-    }
-    else if(p2sunk == 5){
-        console.log("P2 win");
-    }
-}
 
 function player1guess(r,c){
     if(p1Guess[r][c] == 0){ // no need to update things already guessed
@@ -383,18 +372,30 @@ io.on("connection", function(socket){
                 player2guess(data.row, data.col);
                 player1.emit('otherGuess', p2Guess);
                 player2.emit('myGuess', p2Guess);
-                player1.emit('yourTurn');
-                player2.emit('notTurn');
-                playerTurn = 0;
+                if(p2sunk == 5){ //check win
+                    console.log("P2 win");
+                    player1.emit('lose');
+                    player2.emit('win');
+                }else{
+                    player1.emit('yourTurn');
+                    player2.emit('notTurn');
+                    playerTurn = 0;
+                } 
             }
         }else{
             if(socket == player1){
                 player1guess(data.row, data.col);
                 player2.emit('otherGuess', p1Guess);
                 player1.emit('myGuess', p1Guess);
-                player2.emit('yourTurn');
-                player1.emit('notTurn');
-                playerTurn = 1;
+                if(p1sunk == 5){ //check win
+                    console.log("P1 win");
+                    player1.emit('win');
+                    player2.emit('lose');
+                }else{
+                    player2.emit('yourTurn');
+                    player1.emit('notTurn');
+                    playerTurn = 1;
+                }
             }
         }
     });
