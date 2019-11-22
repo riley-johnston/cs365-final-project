@@ -135,8 +135,6 @@ socket.on('win', function(data){
     $("h3").text("You win!");
     $("#tagForm").css("display", "block");
     $("#table1").css("pointer-events" ,"none");
-    //$("#table1").onclick = null;
-    //message = "You win!"
     //textbox for initials + enter button => go to leaderboard
     //wins ++
 });
@@ -144,8 +142,6 @@ socket.on('lose', function(data){
     $("h3").text("You lose :(");
     $("#tagForm").css("display", "block");
     $("#table1").css("pointer-events" ,"none");
-    //$("#table1").onclick = null;
-    //message = "You lose :("
     //textbox for initials + enter button => go to leaderboard
     //wins + 0
 });
@@ -169,37 +165,30 @@ socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
     console.log('Game is created');
 });
-
 socket.on('join', function(data){
     $("h3").text("Hello player 1!");
     console.log('p1 joined');
 });
-
 socket.on('joined', function(data){
     $("h3").text("Hello player 2!");
     console.log('p2 joined');
 });
-
 socket.on("clientDisconnect", function(dataFromServer) {
    //player disconnects
 });
-
 socket.on("ready", function(dataFromServer) {
     //how to get players to take turns?
     $("h3").text("Ready to play!");
     $("#table1").css("display", "block");
  });
-
  socket.on("yourTurn", function(data){
     $("h3").text("Your turn!");
     $("#table1").css("pointer-events" ,"auto"); //makes table clickable
  });
-
  socket.on("notTurn", function(data){
     $("h3").text("Wait for your turn!");
     $("#table1").css("pointer-events" ,"none"); //make table unclickable
  })
-
  socket.on("wait", function(dataFromServer) {
     $("h3").text("Game is full.");
     $("#myTable5").css("visibility", "hidden");
