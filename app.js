@@ -413,7 +413,27 @@ io.on("connection", function(socket){
             player2.emit('notTurn');
         }
     });
+    /*socket.on("getLeaderboard", function(){
+        sendLeaderboardToClient(socket);
+    });
+    socket.on("submit", function(usernameToAdd){
+        db.collection("books").insertOne(usernameToAdd, updateClientIfNoError);
+    })*/
 });
+
+/*Trying to connect to MongoDB
+client.connect(function(err){
+    if(err != null) throw err;
+    else{
+        db = client.db("leaderBoard");
+
+        server.listen(80, function() {
+            console.log("Server is waiting on port 80")
+        });
+    }
+});
+*/
+
 server.listen(80, function() {
-    console.log("Server is waiting on port 80");
+    console.log("Server is waiting on port 80")
 });

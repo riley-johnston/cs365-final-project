@@ -215,20 +215,22 @@ socket.on("ready", function(dataFromServer) {
 
      console.log(leaderboard);
  });
-
-$("#login").click(function(){
-    //When a player clicks the login function
-    //create a player collection and set 
-    //username, wins, and losses.
-    var player = {};
-    player.username = $("username").val();
-    player.wins = 0;
-    player.losses = 0;
-
-    socket.emit("login", player);
-
-    $("#username").val("");
-})*/
+ 
+ $("#submit").click(function() {
+     //I THINK WE NEED DATA FROM SERVER TO KNOW WHETHER
+     //OR NOT THE PLAYER HAS WON OR LOST.
+     //After a player wins or loses, prompt them
+     //for a 3 character username and add it to 
+     //the leaderboard with their score.
+     var player = {};
+     player.username = $("#username").val();
+     player.wins += 1;
+     player.loss = 0;
+     
+     socket.emit("submit", player);
+     
+     $("#username").val("");
+ });*/
 
 $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);
