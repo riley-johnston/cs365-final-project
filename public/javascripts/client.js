@@ -132,10 +132,22 @@ var v = new Vue({
     }
 });
 socket.on('win', function(data){
-    //change client screen to say win and give option to add to leaderboard? disconnect when going to leaderboard or option to reconnet.
+    $("h3").text("You win!");
+    $("#tagForm").css("display", "block");
+    $("#table1").css("pointer-events" ,"none");
+    //$("#table1").onclick = null;
+    //message = "You win!"
+    //textbox for initials + enter button => go to leaderboard
+    //wins ++
 });
 socket.on('lose', function(data){
-    //change client screen to say lose, give option to reconnect?
+    $("h3").text("You lose :(");
+    $("#tagForm").css("display", "block");
+    $("#table1").css("pointer-events" ,"none");
+    //$("#table1").onclick = null;
+    //message = "You lose :("
+    //textbox for initials + enter button => go to leaderboard
+    //wins + 0
 });
 //updates the guess grid displayed under your ships
 socket.on('otherGuess', function(data){
@@ -156,19 +168,16 @@ socket.on('myGuess', function(data){
 socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
     console.log('Game is created');
-    //player 1 created a game
 });
 
 socket.on('join', function(data){
     $("h3").text("Hello player 1!");
     console.log('p1 joined');
-    //player 1 joined game
 });
 
 socket.on('joined', function(data){
     $("h3").text("Hello player 2!");
     console.log('p2 joined');
-    //p2 join
 });
 
 socket.on("clientDisconnect", function(dataFromServer) {
