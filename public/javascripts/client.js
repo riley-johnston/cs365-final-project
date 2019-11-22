@@ -205,6 +205,7 @@ socket.on("ready", function(dataFromServer) {
  
  /*socket.on("setLeaderboard", function(leaderboard){
      //Add a player to the leaderboard.
+     //Copied from notes.
      $("#theLeaderboard").html("");
      for(let player of leaderboard){
          var tdUsername = $("<td></td>").text(player.username);
@@ -228,6 +229,7 @@ socket.on("ready", function(dataFromServer) {
      //After a player wins or loses, prompt them
      //for a 3 character username and add it to 
      //the leaderboard with their score.
+     //Copied from notes.
      var player = {};
      player.username = $("#username").val();
      player.wins += 1;
