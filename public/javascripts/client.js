@@ -12,6 +12,10 @@ socket.on("connect", function(){
     })
 });
 
+//SOUND STUFF
+var audio; // so we can play/pause on audio element
+var sound = 0; //so we know if audio was played to then pause audio
+var audioPlay;
 var v = new Vue({
     el: '#app',
     data:{
@@ -71,6 +75,7 @@ var v = new Vue({
             }
         },
         randomPlacement(){ //cycles through ship placements
+            $("#ready").css("visibility", "visible");
             this.clearShips();
             if(this.layout < 1){ 
                 this.layout++;
@@ -149,17 +154,20 @@ socket.on('lose', function(data){
 socket.on('otherGuess', function(data){
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
-            v.otherGuess[i].splice(j, 1, data[i][j]); 
+            v.otherGuess[i].splice(j, 1, data.guess[i][j]); 
         }
     }
+    playSound(data.isHit);
 });
 //updates the guess grid displayed on your playable grid
 socket.on('myGuess', function(data){
+    console.log(data);
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
-            v.myGuess[i].splice(j, 1, data[i][j]); 
+            v.myGuess[i].splice(j, 1, data.guess[i][j]); 
         }
     }
+    playSound(data.isHit);
 });
 socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
@@ -234,3 +242,30 @@ $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);
     $("#random").css("visibility", "hidden");
 });
+
+function playSound(playHit){
+    audio = document.createElement('audio');
+    if(playHit){
+        console.log("hit sound");
+        audio.setAttribute("src", "sounds\\hit.wav");
+    }else{
+        console.log("miss sound");
+        audio.setAttribute("src", "sounds\\miss.wav");
+    }
+    playPromise = audio.play();
+    if (playPromise !== undefined) {
+        playPromise.then(_ => {
+            sound = 1;
+        })
+        .catch(error => {
+            sound = 0;
+          console.log("error playing audio")
+        });
+    }
+}
+function stopSound(){
+    if(sound == 1){
+        audio.pause();
+        audio.currentTime = 0;
+    }
+}

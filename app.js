@@ -68,6 +68,7 @@ var playerReady = 0;
 var playerTurn = 0; // 0 is p1, 1 is p2
 var p1sunk = 0;
 var p2sunk = 0;
+var isHit;
 //hit ships
 var p1ships ={
     carrier: {
@@ -290,10 +291,12 @@ function player1guess(r,c){
     if(p1Guess[r][c] == 0){ // no need to update things already guessed
         if(officialPlayer2[r][c] == " "){
             p1Guess[r][c] = 2; //miss
+            isHit = 0;
         }
         else{
             p1Guess[r][c] = 1; //hit
             p1hit(r,c); //adds coords to ship object
+            isHit = 1;
         }
     }
 }
@@ -301,10 +304,12 @@ function player2guess(r,c){
     if(p2Guess[r][c] == 0){ // no need to update things already guessed
         if(officialPlayer1[r][c] == " "){ //if theres nothing in p1 
             p2Guess[r][c] = 2; //miss
+            isHit = 0;
         }
         else{
             p2Guess[r][c] = 1; //hit
             p2hit(r,c); //adds coords to ship object
+            isHit = 1;
         }
     }
 }
@@ -370,8 +375,9 @@ io.on("connection", function(socket){
         if(playerTurn){
             if(socket == player2){
                 player2guess(data.row, data.col);
-                player1.emit('otherGuess', p2Guess);
-                player2.emit('myGuess', p2Guess);
+                var guess = p2Guess;
+                player1.emit('otherGuess', {guess, isHit});
+                player2.emit('myGuess', {guess, isHit});
                 if(p2sunk == 5){ //check win
                     console.log("P2 win");
                     player1.emit('lose');
@@ -385,8 +391,9 @@ io.on("connection", function(socket){
         }else{
             if(socket == player1){
                 player1guess(data.row, data.col);
-                player2.emit('otherGuess', p1Guess);
-                player1.emit('myGuess', p1Guess);
+                var guess = p1Guess;
+                player2.emit('otherGuess', {guess, isHit});
+                player1.emit('myGuess', {guess, isHit});
                 if(p1sunk == 5){ //check win
                     console.log("P1 win");
                     player1.emit('win');

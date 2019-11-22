@@ -5,6 +5,9 @@ body {
   padding: 15px;
   font-family: 'Courier New', Courier, monospace;
 }
+#ready{
+  visibility: hidden;
+}
 #tagForm{
   display: none;
 }
