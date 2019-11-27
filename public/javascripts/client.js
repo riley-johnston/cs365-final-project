@@ -202,43 +202,6 @@ socket.on("ready", function(dataFromServer) {
     $("#myTable5").css("visibility", "hidden");
     $("#table2").css("display", "none");
  });
- 
- /*socket.on("setLeaderboard", function(leaderboard){
-     //Add a player to the leaderboard.
-     //Copied from notes.
-     $("#theLeaderboard").html("");
-     for(let player of leaderboard){
-         var tdUsername = $("<td></td>").text(player.username);
-         var tdWins = $("<td></td>").text(player.wins);
-         var tdLoss = $("<td></td>").text(player.losses);
-
-         var tr = $("<tr></tr>")
-            .append(tdUsername)
-            .append(tdWins)
-            .append(tdLoss);
-
-        $("#theLeaderboard").append(tr);
-     }
-
-     console.log(leaderboard);
- });
- 
- $("#submit").click(function() {
-     //I THINK WE NEED DATA FROM SERVER TO KNOW WHETHER
-     //OR NOT THE PLAYER HAS WON OR LOST.
-     //After a player wins or loses, prompt them
-     //for a 3 character username and add it to 
-     //the leaderboard with their score.
-     //Copied from notes.
-     var player = {};
-     player.username = $("#username").val();
-     player.wins += 1;
-     player.loss = 0;
-     
-     socket.emit("submit", player);
-     
-     $("#username").val("");
- });*/
 
 $("#ready").click(function(){
     socket.emit("updateShips", v.myShips);

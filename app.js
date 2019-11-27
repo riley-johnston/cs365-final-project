@@ -314,30 +314,6 @@ function player2guess(r,c){
     }
 }
 
-/* ALL OF THE FOLLOWING IS NOT COMPLETED YET.
-function sendLeaderboardToClient(theSocket){
-    db.collection("players").find({}, {sort: [['wins', -1], ['standing', 1]]}).toArray(function(error, documents){
-        if(error != null){
-            console.log(error);
-        }
-        else if(theSocket == null){
-            io.emit("setLeaderboard", documents);
-        }
-        else{
-            theSocket.emit("setLeaderboard", documents);
-        }
-    });
-}
-
-function updateClientIfNoError(error, result){
-    if(error != null){
-        console.log(error);
-    }
-    else{
-        sendLeaderboardToClient(null);
-    }
-}*/
-
 io.on("connection", function(socket){
     console.log("Someone connected!");
     if (numClients == 0){
@@ -421,26 +397,7 @@ io.on("connection", function(socket){
             player2.emit('notTurn');
         }
     });
-    /*socket.on("getLeaderboard", function(){
-        sendLeaderboardToClient(socket);
-    });
-    socket.on("submit", function(usernameToAdd){
-        db.collection("books").insertOne(usernameToAdd, updateClientIfNoError);
-    })*/
 });
-
-/*Trying to connect to MongoDB
-client.connect(function(err){
-    if(err != null) throw err;
-    else{
-        db = client.db("leaderBoard");
-
-        server.listen(80, function() {
-            console.log("Server is waiting on port 80")
-        });
-    }
-});
-*/
 
 server.listen(80, function() {
     console.log("Server is waiting on port 80")
