@@ -356,21 +356,26 @@ function validateInput(objectToValidate, schema) {
 }
 
 io.on("connection", function(socket){
+    socket.emit('login');
     console.log("Someone connected!");
-    if (numClients == 0){
-        player1 = socket;
-        player1.emit('created'); //First player created game.
-        numClients++;
-    }
-    else if(numClients == 1){
-        player2 = socket;
-        player1.emit('join'); // First player joined game.
-        player2.emit('joined'); // 2nd joined
-        numClients++;
-    }
-    else{
-        socket.emit('wait'); 
-    }
+    socket.on('loggedin', function(data){
+        console.log(data.tag);          //FIRST NEED TO VALIDATE DATA BEFORE ASSIGNING P1 and P2
+        console.log(data.password);
+        if (numClients == 0){
+            player1 = socket;
+            player1.emit('created'); //First player created game.
+            numClients++;
+        }
+        else if(numClients == 1){
+            player2 = socket;
+            player1.emit('join'); // First player joined game.
+            player2.emit('joined'); // 2nd joined
+            numClients++;
+        }
+        else{
+            socket.emit('wait'); 
+        }
+    })
 
     socket.on("getTimeStamp", function(callback){
         callback(startTime);
