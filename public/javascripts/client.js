@@ -136,18 +136,28 @@ var v = new Vue({
         }
     }
 });
+
+$("#guest").click(function(){
+    console.log("play as guest!");
+});
+$("#play").click(function(){
+    console.log("play!");
+    var tag = $("#tag").val();
+    $("#tag").val("");
+    console.log(tag);
+    var password = $("#password").val();
+    $("#password").val("");
+    console.log(password);
+});
+
 socket.on('win', function(data){
     $("h3").text("You win!");
-    $("#tagForm").css("display", "block");
     $("#table1").css("pointer-events" ,"none");
-    //textbox for initials + enter button => go to leaderboard
     //wins ++
 });
 socket.on('lose', function(data){
     $("h3").text("You lose :(");
-    $("#tagForm").css("display", "block");
     $("#table1").css("pointer-events" ,"none");
-    //textbox for initials + enter button => go to leaderboard
     //wins + 0
 });
 //updates the guess grid displayed under your ships

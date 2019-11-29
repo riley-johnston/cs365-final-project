@@ -8,10 +8,12 @@
 <body>
   <h1>BATTLESHIP</h1>
   <h3>Welcome!</h3>
-  <form id="tagForm" action="/leaderboard">
-    <p>please enter your 3 letter tag:</p>
-    <input type="text" name="tag"><br>
-    <input type="submit" value="Submit">
+  <div id="login">
+    <p>Log in or play as guest!</p>
+    <input placeholder="Tag" type="text" id="tag"></br>
+    <input placeholder="Password" type="password" id="password"></br>
+    <button id="guest">Play as Guest</button>
+    <button id="play">Play</button> 
   </form>
   <div id="app">
     <div id="grids">
