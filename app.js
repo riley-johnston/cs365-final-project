@@ -1,8 +1,8 @@
-/*var mongodb = require("mongodb");
+var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 var ObjectID = mongodb.ObjectID;
 var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
-var db;*/
+var db;
 
 var startTime = Date.now();
 {
@@ -314,16 +314,13 @@ function player2guess(r,c){
     }
 }
 
-/* ALL OF THE FOLLOWING IS NOT COMPLETED YET.
 function sendLeaderboardToClient(theSocket){
-    db.collection("players").find({}, {sort: [['wins', -1], ['standing', 1]]}).toArray(function(error, documents){
+    db.collection("leaderboard").find({}, {sort: [['wins', 1]]}).toArray(function(error, documents){
         if(error != null){
             console.log(error);
-        }
-        else if(theSocket == null){
+        }else if(theSocket == null){
             io.emit("setLeaderboard", documents);
-        }
-        else{
+        }else{
             theSocket.emit("setLeaderboard", documents);
         }
     });
@@ -332,11 +329,31 @@ function sendLeaderboardToClient(theSocket){
 function updateClientIfNoError(error, result){
     if(error != null){
         console.log(error);
-    }
-    else{
+    }else{
         sendLeaderboardToClient(null);
     }
-}*/
+}
+
+function validateInput(objectToValidate, schema) {
+	//nonemptyString, positiveInteger
+	for(prop in objectToValidate) {
+		if (schema[prop] === "nonemptyString") {
+			if (!(typeof objectToValidate[prop] === "string" && objectToValidate[prop].length > 0)) {
+				return false;
+			}
+		}
+		else if (schema[prop] === "positiveInteger") {
+			if (typeof objectToValidate[prop] !== "number") return false;
+			if (Math.floor(objectToValidate[prop]) != objectToValidate[prop]) return false; //not an integer
+			if (objectToValidate[prop] <= 0) return false;
+		}
+		else {
+			return false;
+		}
+	}
+
+	return true;
+}
 
 io.on("connection", function(socket){
     console.log("Someone connected!");
@@ -421,27 +438,31 @@ io.on("connection", function(socket){
             player2.emit('notTurn');
         }
     });
-    /*socket.on("getLeaderboard", function(){
+    socket.on("getLeaderBoard", function(){
+        console.log("got call to getLeaderBoard");
         sendLeaderboardToClient(socket);
     });
-    socket.on("submit", function(usernameToAdd){
-        db.collection("books").insertOne(usernameToAdd, updateClientIfNoError);
-    })*/
+    socket.on("submit", function(userToAdd){
+        var itWorked = validateInput(userToAdd, {tag: "nonemptyString", password: "nonemptyString", wins: "positiveInteger"});
+        if(itWorked){
+            db.collection("leaderboard").insertOne(userToAdd, updateClientIfNoError);
+        }
+    });
 });
 
-/*Trying to connect to MongoDB
-client.connect(function(err){
-    if(err != null) throw err;
-    else{
-        db = client.db("leaderBoard");
+//Try to connect to MongoDB
+client.connect(function(err) {
+	if (err != null) throw err; //No DB connection?  Then let our server crash with an error.
+	else {
+		db = client.db("leaderBoard"); //Get our specific database
 
-        server.listen(80, function() {
-            console.log("Server is waiting on port 80")
-        });
-    }
+		//Start listening for client connections
+		server.listen(80, function() {
+			console.log("Server with socket.io is ready.");
+		});
+	}
 });
-*/
 
-server.listen(80, function() {
+/*server.listen(80, function() {
     console.log("Server is waiting on port 80")
-});
+});*/
