@@ -12,6 +12,12 @@ socket.on("connect", function(){
     })
 });
 
+socket.emit("getLeaderboard");
+
+socket.on("setLeaderboard", function(leaderboard){
+    //Need to finish
+})
+
 //SOUND STUFF
 var audio; // so we can play/pause on audio element
 var sound = 0; //so we know if audio was played to then pause audio
