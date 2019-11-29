@@ -12,12 +12,6 @@ socket.on("connect", function(){
     })
 });
 
-socket.emit("getLeaderboard");
-
-socket.on("setLeaderboard", function(leaderboard){
-    //Need to finish
-})
-
 //SOUND STUFF
 var audio; // so we can play/pause on audio element
 var sound = 0; //so we know if audio was played to then pause audio
@@ -265,3 +259,50 @@ function stopSound(){
         audio.currentTime = 0;
     }
 }
+
+socket.emit("getLeaderboard");
+
+socket.on("setLeaderboard", function(leaderboard){
+    //Need to finish
+    $("#theLeaderBoard").html("");
+    for(let user of leaderboard){
+        var tdUser = $("<td></td>").text(user.tag);
+        var tdPass = $("<td></td>").text(user.password);
+        var tdWins = $("<td></td>").text(user.wins);
+
+        var tr = $("<tr></tr>")
+            .append(tdUser)
+            .append(tdPass)
+            .append(tdWins);
+
+        $("#theLeaderBoard").append(tr);
+    }
+
+    console.log(leaderboard);
+});
+
+$("#play").click(function(){
+    if(!$("#tag")[0].checkValidity()){
+        $("#tag")[0].focus();
+        return;
+    }
+    if (!$("#password")[0].checkValidity()) {
+        $("#password")[0].focus();
+        return;
+    }
+    if (!$("#wins")[0].checkValidity()) {
+        $("#wins")[0].focus();
+        return;
+    }
+
+    var user = {};
+    user.tag = $("#tag").val();
+    user.password = $("#password").val();
+    user.wins = parseFloat($("#wins").val());
+
+    socket.emit("submit", user);
+
+    $("#tag").val("");
+    $("#password").val("");
+    $("#wins").val("");
+});
