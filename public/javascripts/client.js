@@ -248,17 +248,16 @@ function stopSound(){
 socket.emit("getLeaderboard");
 
 socket.on("setLeaderboard", function(leaderboard){
-    //Need to finish
     $("#theLeaderBoard").html("");
     for(let user of leaderboard){
         var tdUser = $("<td></td>").text(user.tag);
         var tdPass = $("<td></td>").text(user.password);
-        var tdWins = $("<td></td>").text(user.wins);
+        //var tdWins = $("<td></td>").text(user.wins);
 
         var tr = $("<tr></tr>")
             .append(tdUser)
             .append(tdPass)
-            .append(tdWins);
+            //.append(tdWins);
 
         $("#theLeaderBoard").append(tr);
     }
