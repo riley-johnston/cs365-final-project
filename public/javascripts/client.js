@@ -139,25 +139,36 @@ var v = new Vue({
 
 $("#guest").click(function(){
     console.log("play as guest!");
+    socket.emit('logged', {tag: "guest", password: "guest"});
 });
+
 $("#play").click(function(){
     console.log("play!");
     var tag = $("#tag").val();
     $("#tag").val("");
-    console.log(tag);
     var password = $("#password").val();
     $("#password").val("");
-    console.log(password);
+    socket.emit('loggedin', {tag: tag, password: password});
 });
-
+socket.on('login', function(data){
+    $("#login").css("display", "block");
+    $("#app").css("display", "none");
+    //$("#leaderboard").css("display", "block"); display leaderboard when logging in
+});
 socket.on('win', function(data){
     $("h3").text("You win!");
     $("#table1").css("pointer-events" ,"none");
+    $("#continue").css("display", "block");
+    //button to say continue to leaderboard?
+    //emit a win!
     //wins ++
 });
 socket.on('lose', function(data){
     $("h3").text("You lose :(");
     $("#table1").css("pointer-events" ,"none");
+    $("#continue").css("display", "block");
+    //button to say continue to leaderboard?
+    //emit a lose
     //wins + 0
 });
 //updates the guess grid displayed under your ships
@@ -181,14 +192,18 @@ socket.on('myGuess', function(data){
 });
 socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
+    $("#login").css("display", "none");
     console.log('Game is created');
 });
 socket.on('join', function(data){
     $("h3").text("Hello player 1!");
+    $("#app").css("display", "block");
     console.log('p1 joined');
 });
 socket.on('joined', function(data){
     $("h3").text("Hello player 2!");
+    $("#app").css("display", "block");
+    $("#login").css("display", "none");
     console.log('p2 joined');
 });
 socket.on("clientDisconnect", function(dataFromServer) {

@@ -5,8 +5,12 @@ body {
   padding: 15px;
   font-family: 'Courier New', Courier, monospace;
 }
+#continue{
+  display: none;
+  margin: auto;
+}
 #app{
-  visibility: hidden;
+  display: none;
 }
 #ready{
   visibility: hidden;
