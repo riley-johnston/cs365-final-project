@@ -5,7 +5,7 @@ var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: tru
 var db;
 
 var startTime = Date.now();
-{
+
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -31,7 +31,7 @@ var socketio = require("socket.io");
 var io = socketio(server);
 
 module.exports = app;
-}
+
 var numClients = 0;
 //sockets
 var player1; 
@@ -314,45 +314,17 @@ function player2guess(r,c){
     }
 }
 
-function sendLeaderboardToClient(theSocket){
-    db.collection("leaderboard").find({}, {sort: [['wins', 1]]}).toArray(function(error, documents){
-        if(error != null){
-            console.log(error);
-        }else if(theSocket == null){
-            io.emit("setLeaderboard", documents);
-        }else{
-            theSocket.emit("setLeaderboard", documents);
-        }
-    });
-}
-
-function updateClientIfNoError(error, result){
-    if(error != null){
-        console.log(error);
+function validateInput(data){
+    if(data.tag == "" || data.password == ""){
+        return false;
+    }else if(db.collection("leaderboard").find({tag: {$exists: true}})){
+        //check for password equivalency
+            //If equivalent, return true
+            //If not equivalent, return false
+            return true;
     }else{
-        sendLeaderboardToClient(null);
+        return true;
     }
-}
-
-function validateInput(objectToValidate, schema) {
-	//nonemptyString, positiveInteger
-	for(prop in objectToValidate) {
-		if (schema[prop] === "nonemptyString") {
-			if (!(typeof objectToValidate[prop] === "string" && objectToValidate[prop].length > 0)) {
-				return false;
-			}
-		}
-		else if (schema[prop] === "positiveInteger") {
-			if (typeof objectToValidate[prop] !== "number") return false;
-			if (Math.floor(objectToValidate[prop]) != objectToValidate[prop]) return false; //not an integer
-			if (objectToValidate[prop] <= 0) return false;
-		}
-		else {
-			return false;
-		}
-	}
-
-	return true;
 }
 
 io.on("connection", function(socket){
@@ -361,21 +333,24 @@ io.on("connection", function(socket){
     socket.on('loggedin', function(data){
         console.log(data.tag);          //FIRST NEED TO VALIDATE DATA BEFORE ASSIGNING P1 and P2
         console.log(data.password);
-        if (numClients == 0){
-            player1 = socket;
-            player1.emit('created'); //First player created game.
-            numClients++;
+        if(validateInput(data)){
+            db.collection("leaderboard").insertOne(data); //THIS ADDS A USER TO THE LEADERBOARD COLLECTION
+            if (numClients == 0){
+                player1 = socket;
+                player1.emit('created'); //First player created game.
+                numClients++;
+            }
+            else if(numClients == 1){
+                player2 = socket;
+                player1.emit('join'); // First player joined game.
+                player2.emit('joined'); // 2nd joined
+                numClients++;
+            }
+            else{
+                socket.emit('wait'); 
+            }
         }
-        else if(numClients == 1){
-            player2 = socket;
-            player1.emit('join'); // First player joined game.
-            player2.emit('joined'); // 2nd joined
-            numClients++;
-        }
-        else{
-            socket.emit('wait'); 
-        }
-    })
+    });
 
     socket.on("getTimeStamp", function(callback){
         callback(startTime);
@@ -443,23 +418,13 @@ io.on("connection", function(socket){
             player2.emit('notTurn');
         }
     });
-    socket.on("getLeaderBoard", function(){
-        console.log("got call to getLeaderBoard");
-        sendLeaderboardToClient(socket);
-    });
-    socket.on("submit", function(userToAdd){
-        var itWorked = validateInput(userToAdd, {tag: "nonemptyString", password: "nonemptyString", wins: "positiveInteger"});
-        if(itWorked){
-            db.collection("leaderboard").insertOne(userToAdd, updateClientIfNoError);
-        }
-    });
 });
 
 //Try to connect to MongoDB
 client.connect(function(err) {
 	if (err != null) throw err; //No DB connection?  Then let our server crash with an error.
 	else {
-		db = client.db("leaderBoard"); //Get our specific database
+		db = client.db("Battleship"); //Get our specific database
 
 		//Start listening for client connections
 		server.listen(80, function() {

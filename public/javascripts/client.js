@@ -1,4 +1,5 @@
 var socket = io();
+
 //THIS GETS THE PAGE TO RELOAD IF SERVER CRASHES/IS TAKEN DOWN
 var serverStamp = null;
 socket.on("connect", function(){ 
@@ -150,6 +151,13 @@ $("#play").click(function(){
     $("#password").val("");
     socket.emit('loggedin', {tag: tag, password: password});
 });
+
+$("#continue").click(function(){ 
+    $("#leaderboard").css("display", "block");             //display leaderboard when you click on continue to leaderboard.
+    $("#app").css("display", "none");          
+    $("#continue").css("display", "none");
+});
+
 socket.on('login', function(data){
     $("#login").css("display", "block");
     $("#app").css("display", "none");
@@ -161,7 +169,7 @@ socket.on('win', function(data){
     $("#continue").css("display", "block");
     //button to say continue to leaderboard?
     //emit a win!
-    //wins ++
+    data.wins++;
 });
 socket.on('lose', function(data){
     $("h3").text("You lose :(");
@@ -169,7 +177,7 @@ socket.on('lose', function(data){
     $("#continue").css("display", "block");
     //button to say continue to leaderboard?
     //emit a lose
-    //wins + 0
+    data.wins + 0;
 });
 //updates the guess grid displayed under your ships
 socket.on('otherGuess', function(data){
@@ -259,49 +267,3 @@ function stopSound(){
         audio.currentTime = 0;
     }
 }
-
-socket.emit("getLeaderboard");
-
-socket.on("setLeaderboard", function(leaderboard){
-    $("#theLeaderBoard").html("");
-    for(let user of leaderboard){
-        var tdUser = $("<td></td>").text(user.tag);
-        var tdPass = $("<td></td>").text(user.password);
-        //var tdWins = $("<td></td>").text(user.wins);
-
-        var tr = $("<tr></tr>")
-            .append(tdUser)
-            .append(tdPass)
-            //.append(tdWins);
-
-        $("#theLeaderBoard").append(tr);
-    }
-
-    console.log(leaderboard);
-});
-
-$("#play").click(function(){
-    if(!$("#tag")[0].checkValidity()){
-        $("#tag")[0].focus();
-        return;
-    }
-    if (!$("#password")[0].checkValidity()) {
-        $("#password")[0].focus();
-        return;
-    }
-    if (!$("#wins")[0].checkValidity()) {
-        $("#wins")[0].focus();
-        return;
-    }
-
-    var user = {};
-    user.tag = $("#tag").val();
-    user.password = $("#password").val();
-    user.wins = parseFloat($("#wins").val());
-
-    socket.emit("submit", user);
-
-    $("#tag").val("");
-    $("#password").val("");
-    $("#wins").val("");
-});
