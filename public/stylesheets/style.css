@@ -5,6 +5,12 @@ body {
   padding: 15px;
   font-family: 'Courier New', Courier, monospace;
 }
+#leaderboard{
+  display: block;
+  margin: auto;
+  width: 500px;
+  align-content: center;
+}
 #continue{
   display: none;
   margin: auto;
@@ -31,6 +37,11 @@ body {
   border: 1px solid black;
   float: right;
 }
+#ldr{
+  align-content: center;
+  margin: auto;
+  width: 300px;
+}
 .tableRight{
   float: right;
 }
@@ -56,6 +67,9 @@ table {
 }
 thead {
   background-color: #cfcfcf; 
+}
+th{
+  border: solid 1px black;
 }
 td {
   background-color:#73e8ff;

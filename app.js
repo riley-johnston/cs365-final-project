@@ -39,6 +39,9 @@ var player2;
 //ship placements
 var officialPlayer1;  
 var officialPlayer2;
+
+var player1Tag;
+var player2Tag;
 //guesses
 var p1Guess = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -314,42 +317,107 @@ function player2guess(r,c){
     }
 }
 
-function validateInput(data){
-    if(data.tag == "" || data.password == ""){
-        return false;
-    }else if(db.collection("leaderboard").find({tag: {$exists: true}})){
-        //check for password equivalency
-            //If equivalent, return true
-            //If not equivalent, return false
-            return true;
-    }else{
+function checkDocuments(documents){
+    if(documents[0]){
         return true;
+    }
+    return false;
+}
+
+function validateUser(documents, password){
+    if(documents[0].password == password){
+        console.log("Password was correct.");
+        return true;
+    }else{
+        return false;
     }
 }
 
+function validateInput(data, socket){
+    if(data.tag == "" || data.password == ""){
+        console.log("Invalid. Empty string.");
+    }else{
+        db.collection("leaderboard").find({"tag": data.tag}).toArray(function(error, documents){
+            if (error != null) {
+                console.log(error);
+            }else{
+                if(!checkDocuments(documents)){
+                    console.log("Creating new player");
+                    var newUser = {tag: data.tag, password: data.password, wins: 0}
+                    db.collection("leaderboard").insertOne(newUser);
+                    sendLeaderboard();
+                    connect(socket, data.tag);
+                }else{
+                    if(validateUser(documents, data.password)){
+                        connect(socket, data.tag);
+                    }else{
+                        console.log("Wrong password");
+                    }
+                    console.log("Checking password");
+                }
+            }
+        }
+    )}
+}
+
+function sendLeaderboard(){
+    console.log("Sending");
+    db.collection("leaderboard").find({}).toArray(function(error, documents){
+        if (error != null) {
+			console.log(error);
+		}else{
+            console.log(documents);
+            io.emit("displayLeaderboard", documents);
+        }
+    });
+}
+
+function connect(socket, tag){
+    if (numClients == 0){
+        player1 = socket;
+        player1Tag = tag;
+        console.log(player1Tag);
+        player1.emit('created'); //First player created game.
+        numClients++;
+    }
+    else if(numClients == 1){
+        player2 = socket;
+        player2Tag = tag;
+        console.log(player2Tag);
+        player1.emit('join'); // First player joined game.
+        player2.emit('joined'); // 2nd joined
+        numClients++;
+    }
+    else{
+        socket.emit('wait'); 
+    }
+}
+
+function updateWin(winner){
+    console.log(winner);
+    var numWins;
+    db.collection("leaderboard").find({"tag": winner}).toArray(function(error, documents){
+        if(error != null){
+            console.log(error);
+        }else{
+            numWins = documents[0].wins + 1;
+            db.collection("leaderboard").updateOne({tag: winner}, {$set: {wins: numWins}});
+            sendLeaderboard();
+        }
+    });
+}
+
 io.on("connection", function(socket){
+    sendLeaderboard();
     socket.emit('login');
     console.log("Someone connected!");
     socket.on('loggedin', function(data){
         console.log(data.tag);          //FIRST NEED TO VALIDATE DATA BEFORE ASSIGNING P1 and P2
         console.log(data.password);
-        if(validateInput(data)){
-            db.collection("leaderboard").insertOne(data); //THIS ADDS A USER TO THE LEADERBOARD COLLECTION
-            if (numClients == 0){
-                player1 = socket;
-                player1.emit('created'); //First player created game.
-                numClients++;
-            }
-            else if(numClients == 1){
-                player2 = socket;
-                player1.emit('join'); // First player joined game.
-                player2.emit('joined'); // 2nd joined
-                numClients++;
-            }
-            else{
-                socket.emit('wait'); 
-            }
-        }
+        validateInput(data, socket);
+            //db.collection("leaderboard").insertOne(data); //THIS ADDS A USER TO THE LEADERBOARD COLLECTION
+            //sendLeaderboard(socket);
+            
     });
 
     socket.on("getTimeStamp", function(callback){
@@ -357,12 +425,108 @@ io.on("connection", function(socket){
     });
 
     socket.on("disconnect", function() {
+        console.log("Player disconnected.");
 		if((player1 != null && socket.id == player1.id) || (player2 != null && socket.id == player2.id )){
 			numClients = 0;
 			io.emit('clientDisconnect'); 
 			console.log("Player disconnected.");
-			player1 = null;
-			player2 = null;
+			player1 = null; 
+            player2 = null;
+            //ship placements
+            officialPlayer1 = null;  
+            officialPlayer2 = null;
+
+            player1Tag = null;
+            player2Tag = null;
+            //guesses
+            p1Guess = [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+            p2Guess = [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+            playerReady = 0;
+            playerTurn = 0; // 0 is p1, 1 is p2
+            p1sunk = 0;
+            p2sunk = 0;
+            isHit;
+            //hit ships
+            p1ships ={
+                carrier: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null,
+                    coord4: null,
+                    coord5: null
+                },
+                battleship: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null,
+                    coord4: null
+                },
+                cruiser: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null
+                },
+                submarine: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null
+                },
+                destroyer: {
+                    coord1: null,
+                    coord2: null
+                }
+            }
+            p2ships ={
+                carrier: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null,
+                    coord4: null,
+                    coord5: null
+                },
+                battleship: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null,
+                    coord4: null
+                },
+                cruiser: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null
+                },
+                submarine: {
+                    coord1: null,
+                    coord2: null,
+                    coord3: null
+                },
+                destroyer: {
+                    coord1: null,
+                    coord2: null
+                }
+            }
 		}
 		else{
 			console.log("someone disconnected.");
@@ -377,6 +541,7 @@ io.on("connection", function(socket){
                 player2.emit('myGuess', {guess, isHit});
                 if(p2sunk == 5){ //check win
                     console.log("P2 win");
+                    updateWin(player2Tag);
                     player1.emit('lose');
                     player2.emit('win');
                 }else{
@@ -393,6 +558,7 @@ io.on("connection", function(socket){
                 player1.emit('myGuess', {guess, isHit});
                 if(p1sunk == 5){ //check win
                     console.log("P1 win");
+                    updateWin(player1Tag);
                     player1.emit('win');
                     player2.emit('lose');
                 }else{

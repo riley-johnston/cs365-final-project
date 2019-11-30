@@ -153,15 +153,14 @@ $("#play").click(function(){
 });
 
 $("#continue").click(function(){ 
-    $("#leaderboard").css("display", "block");             //display leaderboard when you click on continue to leaderboard.
-    $("#app").css("display", "none");          
-    $("#continue").css("display", "none");
+    console.log("Continue clicked");
+    location.reload(true);
 });
 
 socket.on('login', function(data){
     $("#login").css("display", "block");
     $("#app").css("display", "none");
-    //$("#leaderboard").css("display", "block"); display leaderboard when logging in
+    $("#leaderboard").css("display", "block"); //display leaderboard when logging in
 });
 socket.on('win', function(data){
     $("h3").text("You win!");
@@ -169,7 +168,6 @@ socket.on('win', function(data){
     $("#continue").css("display", "block");
     //button to say continue to leaderboard?
     //emit a win!
-    data.wins++;
 });
 socket.on('lose', function(data){
     $("h3").text("You lose :(");
@@ -177,7 +175,6 @@ socket.on('lose', function(data){
     $("#continue").css("display", "block");
     //button to say continue to leaderboard?
     //emit a lose
-    data.wins + 0;
 });
 //updates the guess grid displayed under your ships
 socket.on('otherGuess', function(data){
@@ -201,6 +198,7 @@ socket.on('myGuess', function(data){
 socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
     $("#login").css("display", "none");
+    $("#leaderboard").css("display", "none");
     console.log('Game is created');
 });
 socket.on('join', function(data){
@@ -212,10 +210,48 @@ socket.on('joined', function(data){
     $("h3").text("Hello player 2!");
     $("#app").css("display", "block");
     $("#login").css("display", "none");
+    $("#leaderboard").css("display", "none");
     console.log('p2 joined');
 });
 socket.on("clientDisconnect", function(dataFromServer) {
-   //player disconnects
+    v.myGuess = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    v.otherGuess = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    v.myShips = [
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
+    ];
+    v.layout = 0;
+    location.reload(true);
 });
 socket.on("ready", function(dataFromServer) {
     //how to get players to take turns?
@@ -267,3 +303,18 @@ function stopSound(){
         audio.currentTime = 0;
     }
 }
+
+socket.on("displayLeaderboard", function(list){
+    $("#theLeaderBoard").html("");
+    for(let user of list){
+        var username = $("<td></td>").text(user.tag);
+        var wins = $("<td></td>").text(user.wins);
+
+        var tr = $("<tr></tr>")
+           .append(username)
+           .append(wins);
+
+       $("#theLeaderBoard").append(tr);
+    }
+    console.log(list);
+});
