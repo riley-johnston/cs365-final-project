@@ -66,7 +66,7 @@ var v = new Vue({
             
         },
         forfeit(){
-            
+            socket.emit('forfeit');
         },
         clearShips(){ //clears board when deciding ship placement
             for(var i = 0; i < 10; i++){
@@ -78,7 +78,7 @@ var v = new Vue({
         randomPlacement(){ //cycles through ship placements
             $("#ready").css("visibility", "visible");
             this.clearShips();
-            if(this.layout < 1){ 
+            if(this.layout < 2){ 
                 this.layout++;
             }
             else{ 
@@ -116,6 +116,22 @@ var v = new Vue({
                 for(var i = 4; i < 6; i++){
                     this.myShips[i].splice(2, 1, "2"); //place destroyer
                 }
+            }else if(this.layout == 2){
+                for(var i = 3; i < 8; i++){
+                    this.myShips[7].splice(i, 1, "5"); //place carrier
+                }
+               for(var i = 0; i < 3; i++){
+                    this.myShips[i].splice(1, 1, "3A"); //place cruiser
+                }
+                for(var i = 3; i < 7; i++){
+                    this.myShips[i].splice(5, 1, "4"); //place battleship
+                }
+                for(var i = 5; i < 8; i++){
+                    this.myShips[9].splice(i, 1, "3B"); //place submarine
+                }
+                for(var i = 0; i < 2; i++){
+                    this.myShips[i].splice(8, 1, "2"); //place destroyer
+                }
             }
         },
         styleFor(typeOfSquare) {
@@ -138,13 +154,15 @@ var v = new Vue({
     }
 });
 
+$("#forfiet").click(function(){
+    $("h3").text("Are you sure you want to forfiet?");
+    $("#confirm").css("display", "block");
+})
 $("#guest").click(function(){
-    console.log("play as guest!");
-    socket.emit('logged', {tag: "guest", password: "guest"});
+    socket.emit('loggedin', {tag: "guest", password: "guest"});
 });
 
 $("#play").click(function(){
-    console.log("play!");
     var tag = $("#tag").val();
     $("#tag").val("");
     var password = $("#password").val();
@@ -153,7 +171,6 @@ $("#play").click(function(){
 });
 
 $("#continue").click(function(){ 
-    console.log("Continue clicked");
     location.reload(true);
 });
 
@@ -187,7 +204,6 @@ socket.on('otherGuess', function(data){
 });
 //updates the guess grid displayed on your playable grid
 socket.on('myGuess', function(data){
-    console.log(data);
     for(let i = 0; i< 10; i++){
         for(let j = 0; j< 10; j++){
             v.myGuess[i].splice(j, 1, data.guess[i][j]); 
@@ -199,19 +215,16 @@ socket.on('created', function(data){
     $("h3").text("Waiting for player 2.");
     $("#login").css("display", "none");
     $("#leaderboard").css("display", "none");
-    console.log('Game is created');
 });
 socket.on('join', function(data){
     $("h3").text("Hello player 1!");
     $("#app").css("display", "block");
-    console.log('p1 joined');
 });
 socket.on('joined', function(data){
     $("h3").text("Hello player 2!");
     $("#app").css("display", "block");
     $("#login").css("display", "none");
     $("#leaderboard").css("display", "none");
-    console.log('p2 joined');
 });
 socket.on("clientDisconnect", function(dataFromServer) {
     v.myGuess = [
@@ -280,10 +293,8 @@ $("#ready").click(function(){
 function playSound(playHit){
     audio = document.createElement('audio');
     if(playHit){
-        console.log("hit sound");
         audio.setAttribute("src", "sounds\\hit.wav");
     }else{
-        console.log("miss sound");
         audio.setAttribute("src", "sounds\\miss.wav");
     }
     playPromise = audio.play();
@@ -316,5 +327,4 @@ socket.on("displayLeaderboard", function(list){
 
        $("#theLeaderBoard").append(tr);
     }
-    console.log(list);
 });

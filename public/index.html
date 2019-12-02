@@ -8,6 +8,7 @@
 <body>
   <h1>BATTLESHIP</h1>
   <h3>Welcome!</h3>
+  <button id="confirm" v-on:click="forfeit()">Yes</button>
   <div id="login">
     <p>Log in or play as guest!</p>
     <input placeholder="Tag" type="text" id="tag"></br>
@@ -129,7 +130,7 @@
             <tbody>
               <tr>
                 <td>
-                  <button id = "forfeit" class="optionbtn" v-on:click="forfeit()">Forfeit</button>
+                  <button id = "forfeit" class="optionbtn" >Forfeit</button>
                 </td>
               </tr>
               <tr>

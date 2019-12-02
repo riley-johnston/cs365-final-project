@@ -32,107 +32,126 @@ var io = socketio(server);
 
 module.exports = app;
 
-var numClients = 0;
-//sockets
-var player1; 
+var numClients;
+var player1; //sockets
 var player2;
-//ship placements
-var officialPlayer1;  
+var officialPlayer1;  //ship placements
 var officialPlayer2;
-
-var player1Tag;
+var player1Tag; //player tags
 var player2Tag;
-//guesses
-var p1Guess = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-];
-var p2Guess = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-];
-var playerReady = 0;
-var playerTurn = 0; // 0 is p1, 1 is p2
-var p1sunk = 0;
-var p2sunk = 0;
-var isHit;
-//hit ships
-var p1ships ={
-    carrier: {
-        coord1: null,
-        coord2: null,
-        coord3: null,
-        coord4: null,
-        coord5: null
-    },
-    battleship: {
-        coord1: null,
-        coord2: null,
-        coord3: null,
-        coord4: null
-    },
-    cruiser: {
-        coord1: null,
-        coord2: null,
-        coord3: null
-    },
-    submarine: {
-        coord1: null,
-        coord2: null,
-        coord3: null
-    },
-    destroyer: {
-        coord1: null,
-        coord2: null
+var p1Guess;  //player guesses
+var p2Guess;
+var playerReady; //whos ready?
+var playerTurn; // 0 is p1, 1 is p2
+var p1sunk; //sunk counter
+var p2sunk;
+var isHit; //sounds!
+var p1ships;  //hit ships
+var p2ships;
+
+prepGame();
+
+function prepGame(){
+    numClients = 0;
+    player1 = null;
+    player2 = null;
+    officialPlayer1 = null;
+    officialPlayer2 = null;
+    player1Tag = null;
+    player2Tag = null;
+    p1Guess = [ 
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    p2Guess = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    playerReady = 0;
+    playerTurn = 0; 
+    p1sunk = 0;
+    p2sunk = 0;
+    isHit = 0; 
+    p1ships ={
+        carrier: {
+            coord1: null,
+            coord2: null,
+            coord3: null,
+            coord4: null,
+            coord5: null
+        },
+        battleship: {
+            coord1: null,
+            coord2: null,
+            coord3: null,
+            coord4: null
+        },
+        cruiser: {
+            coord1: null,
+            coord2: null,
+            coord3: null
+        },
+        submarine: {
+            coord1: null,
+            coord2: null,
+            coord3: null
+        },
+        destroyer: {
+            coord1: null,
+            coord2: null
+        }
+    }
+    p2ships ={
+        carrier: {
+            coord1: null,
+            coord2: null,
+            coord3: null,
+            coord4: null,
+            coord5: null
+        },
+        battleship: {
+            coord1: null,
+            coord2: null,
+            coord3: null,
+            coord4: null
+        },
+        cruiser: {
+            coord1: null,
+            coord2: null,
+            coord3: null
+        },
+        submarine: {
+            coord1: null,
+            coord2: null,
+            coord3: null
+        },
+        destroyer: {
+            coord1: null,
+            coord2: null
+        }
     }
 }
-var p2ships ={
-    carrier: {
-        coord1: null,
-        coord2: null,
-        coord3: null,
-        coord4: null,
-        coord5: null
-    },
-    battleship: {
-        coord1: null,
-        coord2: null,
-        coord3: null,
-        coord4: null
-    },
-    cruiser: {
-        coord1: null,
-        coord2: null,
-        coord3: null
-    },
-    submarine: {
-        coord1: null,
-        coord2: null,
-        coord3: null
-    },
-    destroyer: {
-        coord1: null,
-        coord2: null
-    }
-}
+
+/*
+    This records the coordinates of hit ships for player 1
+*/
 function p1hit(r, c){
-    console.log("hit!");
     if(officialPlayer2[r][c] == "2"){
         if(!p1ships.destroyer.coord1){
             p1ships.destroyer.coord1 = [r, c];
@@ -200,8 +219,10 @@ function p1hit(r, c){
         }
     }
 }
+/*
+    This records the coordinates of hit ships for player 2
+*/
 function p2hit(r, c){
-    console.log("hit!");
     if(officialPlayer1[r][c] == "2"){
         if(!p2ships.destroyer.coord1){
             p2ships.destroyer.coord1 = [r, c];
@@ -269,17 +290,16 @@ function p2hit(r, c){
         }
     }
 }
-
+/*
+    This "sinks" a ship (value change) and ups the sunk counter (for win condition)
+*/
 function sunk(size, ship, player){
-    console.log("sunk!");
     if(player == player1){
         for(var i = 0; i < size; i++){
             var coord = (Object.values(ship)[i]);
             p1Guess[coord[0]].splice(coord[1], 1, 3); // 3 = sunk;
         }
         p1sunk++;
-        //console.log(p1ships.ship);
-        //player1.emit('youSunk', ship.name)
     }else{
         for(var i = 0; i < size; i++){
             var coord = (Object.values(ship)[i]);
@@ -288,13 +308,14 @@ function sunk(size, ship, player){
         p2sunk++;
     }
 }
-
-
+/*
+    This checks player 1's guess to the placement of p2s ships
+*/
 function player1guess(r,c){
     if(p1Guess[r][c] == 0){ // no need to update things already guessed
         if(officialPlayer2[r][c] == " "){
             p1Guess[r][c] = 2; //miss
-            isHit = 0;
+            isHit = 0;  
         }
         else{
             p1Guess[r][c] = 1; //hit
@@ -303,6 +324,9 @@ function player1guess(r,c){
         }
     }
 }
+/*
+    This checks player 2's guess to the placement of p1s ships
+*/
 function player2guess(r,c){
     if(p2Guess[r][c] == 0){ // no need to update things already guessed
         if(officialPlayer1[r][c] == " "){ //if theres nothing in p1 
@@ -361,29 +385,25 @@ function validateInput(data, socket){
 }
 
 function sendLeaderboard(){
-    console.log("Sending");
     db.collection("leaderboard").find({}).toArray(function(error, documents){
         if (error != null) {
 			console.log(error);
 		}else{
-            console.log(documents);
             io.emit("displayLeaderboard", documents);
         }
     });
 }
 
 function connect(socket, tag){
-    if (numClients == 0){
+    if (numClients == 0){ 
         player1 = socket;
         player1Tag = tag;
-        console.log(player1Tag);
         player1.emit('created'); //First player created game.
         numClients++;
     }
     else if(numClients == 1){
         player2 = socket;
         player2Tag = tag;
-        console.log(player2Tag);
         player1.emit('join'); // First player joined game.
         player2.emit('joined'); // 2nd joined
         numClients++;
@@ -394,7 +414,6 @@ function connect(socket, tag){
 }
 
 function updateWin(winner){
-    console.log(winner);
     var numWins;
     db.collection("leaderboard").find({"tag": winner}).toArray(function(error, documents){
         if(error != null){
@@ -408,16 +427,12 @@ function updateWin(winner){
 }
 
 io.on("connection", function(socket){
-    sendLeaderboard();
+    sendLeaderboard();  //send client current leaderboard
     socket.emit('login');
     console.log("Someone connected!");
+
     socket.on('loggedin', function(data){
-        console.log(data.tag);          //FIRST NEED TO VALIDATE DATA BEFORE ASSIGNING P1 and P2
-        console.log(data.password);
-        validateInput(data, socket);
-            //db.collection("leaderboard").insertOne(data); //THIS ADDS A USER TO THE LEADERBOARD COLLECTION
-            //sendLeaderboard(socket);
-            
+        validateInput(data, socket);    //FIRST NEED TO VALIDATE DATA BEFORE ASSIGNING P1 and P2
     });
 
     socket.on("getTimeStamp", function(callback){
@@ -430,108 +445,13 @@ io.on("connection", function(socket){
 			numClients = 0;
 			io.emit('clientDisconnect'); 
 			console.log("Player disconnected.");
-			player1 = null; 
-            player2 = null;
-            //ship placements
-            officialPlayer1 = null;  
-            officialPlayer2 = null;
-
-            player1Tag = null;
-            player2Tag = null;
-            //guesses
-            p1Guess = [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            ];
-            p2Guess = [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            ];
-            playerReady = 0;
-            playerTurn = 0; // 0 is p1, 1 is p2
-            p1sunk = 0;
-            p2sunk = 0;
-            isHit;
-            //hit ships
-            p1ships ={
-                carrier: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null,
-                    coord4: null,
-                    coord5: null
-                },
-                battleship: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null,
-                    coord4: null
-                },
-                cruiser: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null
-                },
-                submarine: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null
-                },
-                destroyer: {
-                    coord1: null,
-                    coord2: null
-                }
-            }
-            p2ships ={
-                carrier: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null,
-                    coord4: null,
-                    coord5: null
-                },
-                battleship: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null,
-                    coord4: null
-                },
-                cruiser: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null
-                },
-                submarine: {
-                    coord1: null,
-                    coord2: null,
-                    coord3: null
-                },
-                destroyer: {
-                    coord1: null,
-                    coord2: null
-                }
-            }
+			prepGame(); //reset vars
 		}
 		else{
 			console.log("someone disconnected.");
         }
     });
+
     socket.on('newGuess', function(data){
         if(playerTurn){
             if(socket == player2){
@@ -540,7 +460,6 @@ io.on("connection", function(socket){
                 player1.emit('otherGuess', {guess, isHit});
                 player2.emit('myGuess', {guess, isHit});
                 if(p2sunk == 5){ //check win
-                    console.log("P2 win");
                     updateWin(player2Tag);
                     player1.emit('lose');
                     player2.emit('win');
@@ -569,6 +488,7 @@ io.on("connection", function(socket){
             }
         }
     });
+    
     socket.on('updateShips', function(data){
         if(socket == player1){
             officialPlayer1 = data;
@@ -591,7 +511,6 @@ client.connect(function(err) {
 	if (err != null) throw err; //No DB connection?  Then let our server crash with an error.
 	else {
 		db = client.db("Battleship"); //Get our specific database
-
 		//Start listening for client connections
 		server.listen(80, function() {
 			console.log("Server with socket.io is ready.");

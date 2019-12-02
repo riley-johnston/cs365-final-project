@@ -5,6 +5,10 @@ body {
   padding: 15px;
   font-family: 'Courier New', Courier, monospace;
 }
+#confirm{
+  display: none;
+  margin: auto;
+}
 #leaderboard{
   display: block;
   margin: auto;
