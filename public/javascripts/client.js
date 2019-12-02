@@ -59,11 +59,8 @@ var v = new Vue({
         layout: 0
     },
     methods: {
-        changeResult(row, col){ 
+        changeResult(row, col){  //sending our guess to the server
             socket.emit('newGuess', {row, col});
-        },
-        checkStatus(){
-            
         },
         forfeit(){
             socket.emit('forfeit');
@@ -134,7 +131,7 @@ var v = new Vue({
                 }
             }
         },
-        styleFor(typeOfSquare) {
+        styleFor(typeOfSquare) {    //iterates through the types of squares so we can later set the css
             if(typeOfSquare == 0){
                 return "water";
             }
@@ -158,40 +155,36 @@ $("#forfiet").click(function(){
     $("h3").text("Are you sure you want to forfiet?");
     $("#confirm").css("display", "block");
 })
-$("#guest").click(function(){
+$("#guest").click(function(){   //When the player clicks play as guest, set username and password to guest
     socket.emit('loggedin', {tag: "guest", password: "guest"});
 });
 
-$("#play").click(function(){
-    var tag = $("#tag").val();
+$("#play").click(function(){    //When the player clicks play, grab the username and password and 
+    var tag = $("#tag").val();  //emit to the server that someone has logged in
     $("#tag").val("");
     var password = $("#password").val();
     $("#password").val("");
     socket.emit('loggedin', {tag: tag, password: password});
 });
 
-$("#continue").click(function(){ 
-    location.reload(true);
+$("#continue").click(function(){    //When a player clicks continue to leaderboard, reload everything
+    location.reload(true);          //to the login page
 });
 
-socket.on('login', function(data){
+socket.on('login', function(data){      //Display login format, hide app
     $("#login").css("display", "block");
     $("#app").css("display", "none");
     $("#leaderboard").css("display", "block"); //display leaderboard when logging in
 });
-socket.on('win', function(data){
-    $("h3").text("You win!");
+socket.on('win', function(data){        //When someone wins, show the continue to leaderboard button
+    $("h3").text("You win!");           //and disable clicking on the tables.
     $("#table1").css("pointer-events" ,"none");
     $("#continue").css("display", "block");
-    //button to say continue to leaderboard?
-    //emit a win!
 });
-socket.on('lose', function(data){
-    $("h3").text("You lose :(");
+socket.on('lose', function(data){       //When someone loses, show the continue to leaderboard button
+    $("h3").text("You lose :(");        //and disable clicking on the tables.
     $("#table1").css("pointer-events" ,"none");
     $("#continue").css("display", "block");
-    //button to say continue to leaderboard?
-    //emit a lose
 });
 //updates the guess grid displayed under your ships
 socket.on('otherGuess', function(data){
@@ -211,22 +204,23 @@ socket.on('myGuess', function(data){
     }
     playSound(data.isHit);
 });
-socket.on('created', function(data){
+socket.on('created', function(data){        //Sends proper data/displays proper things when a game is created
     $("h3").text("Waiting for player 2.");
     $("#login").css("display", "none");
     $("#leaderboard").css("display", "none");
 });
-socket.on('join', function(data){
+socket.on('join', function(data){       //sends proper data/displays proper things when player 1 joins
     $("h3").text("Hello player 1!");
     $("#app").css("display", "block");
 });
-socket.on('joined', function(data){
+socket.on('joined', function(data){     //sends proper data/displays proper things when player 2 joins
     $("h3").text("Hello player 2!");
     $("#app").css("display", "block");
     $("#login").css("display", "none");
     $("#leaderboard").css("display", "none");
 });
 socket.on("clientDisconnect", function(dataFromServer) {
+    //reset all grids when someone disconnects from the server.
     v.myGuess = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -266,8 +260,7 @@ socket.on("clientDisconnect", function(dataFromServer) {
     v.layout = 0;
     location.reload(true);
 });
-socket.on("ready", function(dataFromServer) {
-    //how to get players to take turns?
+socket.on("ready", function(dataFromServer) {   //When someone clicks ready to play
     $("h3").text("Ready to play!");
     $("#table1").css("display", "block");
  });
@@ -279,14 +272,14 @@ socket.on("ready", function(dataFromServer) {
     $("h3").text("Wait for your turn!");
     $("#table1").css("pointer-events" ,"none"); //make table unclickable
  })
- socket.on("wait", function(dataFromServer) {
-    $("h3").text("Game is full.");
+ socket.on("wait", function(dataFromServer) {   //If more than one person loggs in, don't display anything
+    $("h3").text("Game is full.");              //and wait until a slot opens up
     $("#myTable5").css("visibility", "hidden");
     $("#table2").css("display", "none");
  });
 
-$("#ready").click(function(){
-    socket.emit("updateShips", v.myShips);
+$("#ready").click(function(){           //When a user clicks ready to play, disable ship placement and 
+    socket.emit("updateShips", v.myShips); //send the final ship placement to the server.
     $("#random").css("visibility", "hidden");
 });
 
@@ -315,7 +308,7 @@ function stopSound(){
     }
 }
 
-socket.on("displayLeaderboard", function(list){
+socket.on("displayLeaderboard", function(list){     //Displaying the leaderboard in a table format
     $("#theLeaderBoard").html("");
     for(let user of list){
         var username = $("<td></td>").text(user.tag);

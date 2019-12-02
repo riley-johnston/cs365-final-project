@@ -51,7 +51,7 @@ var p2ships;
 
 prepGame();
 
-function prepGame(){
+function prepGame(){ //Sets all variables to their default values
     numClients = 0;
     player1 = null;
     player2 = null;
@@ -341,16 +341,16 @@ function player2guess(r,c){
     }
 }
 
-function checkDocuments(documents){
+function checkDocuments(documents){ //Checks whether or not the cursor values of the database exists.
     if(documents[0]){
         return true;
     }
     return false;
 }
 
-function validateUser(documents, password){
-    if(documents[0].password == password){
-        console.log("Password was correct.");
+function validateUser(documents, password){ //Checks to see whether or not a user's recorded
+    if(documents[0].password == password){  //password matches what is in the database for that
+        console.log("Password was correct.");//user. Prevents users from having the same username
         return true;
     }else{
         return false;
@@ -358,6 +358,16 @@ function validateUser(documents, password){
 }
 
 function validateInput(data, socket){
+    /*
+        Checks if the user enters valid input.
+            --Empty string doesn't work
+            --If they are not already in database
+                --create new player with matching username and password and send the leaderboard to the client
+            --Else if they already exist in the database
+                --validate their password.
+                    --If correct password, log in to game
+                    --If not, don't allow them to play a game.
+    */
     if(data.tag == "" || data.password == ""){
         console.log("Invalid. Empty string.");
     }else{
@@ -366,7 +376,6 @@ function validateInput(data, socket){
                 console.log(error);
             }else{
                 if(!checkDocuments(documents)){
-                    console.log("Creating new player");
                     var newUser = {tag: data.tag, password: data.password, wins: 0}
                     db.collection("leaderboard").insertOne(newUser);
                     sendLeaderboard();
@@ -377,14 +386,13 @@ function validateInput(data, socket){
                     }else{
                         console.log("Wrong password");
                     }
-                    console.log("Checking password");
                 }
             }
         }
     )}
 }
 
-function sendLeaderboard(){
+function sendLeaderboard(){     //
     db.collection("leaderboard").find({}).toArray(function(error, documents){
         if (error != null) {
 			console.log(error);
