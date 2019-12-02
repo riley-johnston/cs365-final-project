@@ -154,10 +154,11 @@ var v = new Vue({
     }
 });
 
-$("#forfiet").click(function(){
-    $("h3").text("Are you sure you want to forfiet?");
+$("#forfeit").click(function(){
+    $("h3").text("Are you sure you want to forfeit?");
     $("#confirm").css("display", "block");
-})
+});
+
 $("#guest").click(function(){
     socket.emit('loggedin', {tag: "guest", password: "guest"});
 });
@@ -183,6 +184,7 @@ socket.on('win', function(data){
     $("h3").text("You win!");
     $("#table1").css("pointer-events" ,"none");
     $("#continue").css("display", "block");
+    $("#confirm").css("display", "none");
     //button to say continue to leaderboard?
     //emit a win!
 });
@@ -190,6 +192,7 @@ socket.on('lose', function(data){
     $("h3").text("You lose :(");
     $("#table1").css("pointer-events" ,"none");
     $("#continue").css("display", "block");
+    $("#confirm").css("display", "none");
     //button to say continue to leaderboard?
     //emit a lose
 });
@@ -270,6 +273,7 @@ socket.on("ready", function(dataFromServer) {
     //how to get players to take turns?
     $("h3").text("Ready to play!");
     $("#table1").css("display", "block");
+    $("#forfeit").css("visibility", "visible");
  });
  socket.on("yourTurn", function(data){
     $("h3").text("Your turn!");

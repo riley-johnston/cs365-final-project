@@ -476,7 +476,6 @@ io.on("connection", function(socket){
                 player2.emit('otherGuess', {guess, isHit});
                 player1.emit('myGuess', {guess, isHit});
                 if(p1sunk == 5){ //check win
-                    console.log("P1 win");
                     updateWin(player1Tag);
                     player1.emit('win');
                     player2.emit('lose');
@@ -488,7 +487,7 @@ io.on("connection", function(socket){
             }
         }
     });
-    
+
     socket.on('updateShips', function(data){
         if(socket == player1){
             officialPlayer1 = data;
@@ -502,6 +501,18 @@ io.on("connection", function(socket){
             io.emit('ready'); //say we are ready for guessing!
             player1.emit('yourTurn');
             player2.emit('notTurn');
+        }
+    });
+
+    socket.on('forfeit', function(data){
+        if(socket == player1){
+            updateWin(player2Tag);
+            player1.emit('lose');
+            player2.emit('win');
+        }else if(socket == player2){
+            updateWin(player1Tag);
+            player1.emit('win');
+            player2.emit('lose');
         }
     });
 });

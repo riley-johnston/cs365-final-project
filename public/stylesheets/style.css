@@ -9,6 +9,9 @@ body {
   display: none;
   margin: auto;
 }
+#forfeit{
+  visibility: hidden;
+}
 #leaderboard{
   display: block;
   margin: auto;
