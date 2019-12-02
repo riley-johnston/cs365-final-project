@@ -151,8 +151,8 @@ var v = new Vue({
     }
 });
 
-$("#forfiet").click(function(){
-    $("h3").text("Are you sure you want to forfiet?");
+$("#forfeit").click(function(){
+    $("h3").text("Are you sure you want to forfeit?");
     $("#confirm").css("display", "block");
 })
 $("#guest").click(function(){   //When the player clicks play as guest, set username and password to guest
@@ -263,6 +263,7 @@ socket.on("clientDisconnect", function(dataFromServer) {
 socket.on("ready", function(dataFromServer) {   //When someone clicks ready to play
     $("h3").text("Ready to play!");
     $("#table1").css("display", "block");
+    $("#forfeit").css("visibility", "visible");
  });
  socket.on("yourTurn", function(data){
     $("h3").text("Your turn!");

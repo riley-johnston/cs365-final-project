@@ -8,7 +8,6 @@
 <body>
   <h1>BATTLESHIP</h1>
   <h3>Welcome!</h3>
-  <button id="confirm" v-on:click="forfeit()">Yes</button>
   <div id="login">
     <p>Log in or play as guest!</p>
     <input placeholder="Tag" type="text" id="tag"></br>
@@ -18,6 +17,7 @@
   </div>
   <button id="continue">Continue to leaderboard</button>
   <div id="app">
+    <button id="confirm" v-on:click="forfeit()">Yes</button>
     <div id="grids">
       <div id="table1" class="tableLeft">
         <table id="myTable1">
@@ -130,7 +130,7 @@
             <tbody>
               <tr>
                 <td>
-                  <button id = "forfeit" class="optionbtn" >Forfeit</button>
+                  <button id="forfeit" class="optionbtn" >Forfeit</button>
                 </td>
               </tr>
               <tr>

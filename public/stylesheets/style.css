@@ -1,13 +1,8 @@
-
 body {
   text-align: center;
   background-color: #9e9e9e;
   padding: 15px;
   font-family: 'Courier New', Courier, monospace;
-}
-#confirm{
-  display: none;
-  margin: auto;
 }
 #leaderboard{
   display: block;
@@ -15,20 +10,14 @@ body {
   width: 500px;
   align-content: center;
 }
-#continue{
+#continue, #confirm{
   display: none;
   margin: auto;
 }
-#app{
-  display: none;
-}
-#ready{
+#ready, #forfeit{
   visibility: hidden;
 }
-#tagForm{
-  display: none;
-}
-#table1{
+#tagForm, #table1, #app{
   display: none;
 }
 #grids{
