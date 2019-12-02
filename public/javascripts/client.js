@@ -1,3 +1,8 @@
+/*
+  Riley Johnston
+  Anna D'Amico
+  Friday November 29th 2019
+*/
 var socket = io();
 
 //THIS GETS THE PAGE TO RELOAD IF SERVER CRASHES/IS TAKEN DOWN
