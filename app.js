@@ -392,7 +392,7 @@ function validateInput(data, socket){
     )}
 }
 
-function sendLeaderboard(){     //
+function sendLeaderboard(){     //Sends the leaderboard data to the client for displaying
     db.collection("leaderboard").find({}).toArray(function(error, documents){
         if (error != null) {
 			console.log(error);
@@ -402,7 +402,7 @@ function sendLeaderboard(){     //
     });
 }
 
-function connect(socket, tag){
+function connect(socket, tag){  //Called when someone connects.
     if (numClients == 0){ 
         player1 = socket;
         player1Tag = tag;
@@ -421,7 +421,7 @@ function connect(socket, tag){
     }
 }
 
-function updateWin(winner){
+function updateWin(winner){     //Updates the number of wins on the leaderboard for the player that won.
     var numWins;
     db.collection("leaderboard").find({"tag": winner}).toArray(function(error, documents){
         if(error != null){
@@ -447,7 +447,7 @@ io.on("connection", function(socket){
         callback(startTime);
     });
 
-    socket.on("disconnect", function() {
+    socket.on("disconnect", function() { //Disconnects players and resets calues for numClients
         console.log("Player disconnected.");
 		if((player1 != null && socket.id == player1.id) || (player2 != null && socket.id == player2.id )){
 			numClients = 0;
@@ -460,8 +460,8 @@ io.on("connection", function(socket){
         }
     });
 
-    socket.on('newGuess', function(data){
-        if(playerTurn){
+    socket.on('newGuess', function(data){       //Called when a player makes a guess. Checks if win
+        if(playerTurn){                         //If not, it changes the guess grid and sends to client
             if(socket == player2){
                 player2guess(data.row, data.col);
                 var guess = p2Guess;
@@ -496,7 +496,7 @@ io.on("connection", function(socket){
         }
     });
 
-    socket.on('updateShips', function(data){
+    socket.on('updateShips', function(data){    //Updates the ships grid and checks if both are ready
         if(socket == player1){
             officialPlayer1 = data;
             playerReady++;
@@ -512,7 +512,7 @@ io.on("connection", function(socket){
         }
     });
 
-    socket.on('forfeit', function(data){
+    socket.on('forfeit', function(data){ //When clicked, sets winner and loser and goes to leaderboard screen
         if(socket == player1){
             updateWin(player2Tag);
             player1.emit('lose');
@@ -536,7 +536,3 @@ client.connect(function(err) {
 		});
 	}
 });
-
-/*server.listen(80, function() {
-    console.log("Server is waiting on port 80")
-});*/
